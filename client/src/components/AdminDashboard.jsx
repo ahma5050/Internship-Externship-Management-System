@@ -13,6 +13,7 @@ import {
 } from "react-icons/hi";
 import { ThemContext } from "../context/ThemContext";
 import { FaQuoteRight } from "react-icons/fa";
+import PendingAdvisorForAdmin from "./PendingAdvisorForAdmin";
 
 
 const AdminDashboard = () => {
@@ -69,7 +70,8 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className={`p-4 md:p-8 max-w-7xl mx-auto h-[300px] ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
+    <div className={`p-4 md:p-8 max-w-7xl mx-auto ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
+
       {/* Luxurious Admin Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
@@ -210,8 +212,11 @@ const AdminDashboard = () => {
           </div>
         </div>
       </Card>
+      <PendingAdvisorForAdmin />
+ 
     </div>
   );
 };
+
 
 export default AdminDashboard;

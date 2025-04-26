@@ -55,6 +55,10 @@ const SignIn = () => {
         localStorage.setItem("AdminId", data._id);
       }
 
+      if (data?.roles === "Advisor" && data._id) {
+        localStorage.setItem("AdvisorId", data._id);
+      }
+
       console.log("dataaaaaaaaaaaaaaaaa", data);
       Navigate("/");
     } catch (error) {
@@ -113,7 +117,7 @@ const SignIn = () => {
               <option value="User">User</option>
               <option value="Admin">Admin</option>
               <option value="Faculty">Faculty</option>
-              <option value="Adviser">Adviser</option>
+              <option value="Advisor">Advisor</option>
             </select>
 
             <Button

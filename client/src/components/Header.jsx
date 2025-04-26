@@ -7,12 +7,12 @@ import { MdLightMode } from "react-icons/md";
 import { MdDarkMode } from "react-icons/md";
 import { ThemContext } from '../context/ThemContext';
 import { useSelector } from 'react-redux';
-import { FaUserEdit } from "react-icons/fa";
+import { FaUniversity, FaUserEdit } from "react-icons/fa";
 import { MdAttachEmail } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 import { LiaSignOutAltSolid } from "react-icons/lia";
 import { FaUser } from "react-icons/fa";
-
+import { motion } from 'framer-motion';
 
 
 const Header = () => {
@@ -25,12 +25,14 @@ const Header = () => {
   console.log("Profile URL:", currentUser?.profile);
 
   return (
-    <Navbar className='border-b-2'>
-      <Link to="/" className='text-xl font-semibold font-serif'>
-        <span className='text-3xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg px-3 py-0.5 self-center font-extrabold text-black'>
-          @m
-        </span>'<span className='text-orange-600'>erudite</span>
-      </Link>
+    <Navbar className='border-b-2 z-40 relative overflow-visible'>
+<Link to="/" className="flex items-center gap-2 text-xl font-serif font-semibold">
+      <FaUniversity className="text-4xl text-gray-400 drop-shadow-md" />
+      <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-purple-400 to-pink-500 text-4xl font-extrabold tracking-wide font-sans">
+        IEM
+      </span>
+  
+    </Link>
       <form>
         <TextInput type='text' placeholder='Search...' rightIcon={AiOutlineSearch} className='hidden lg:block' />
         <Button color='gray' pill className='lg:hidden'>
@@ -50,9 +52,10 @@ const Header = () => {
   <Dropdown
     arrowIcon={false}
     inline
+      className="z-50"
     label={
       currentUser?.profile === defaultProfileImage ? (
-        <div className="flex items-center justify-center h-14 w-14 bg-gray-400 text-white text-xl font-bold rounded-full border-2 border-t-pink-700  border-l-pink-700  border-r-pink-700  border-b-pink-700">
+        <div className="flex items-center justify-center h-14 w-14 bg-gray-400 text-white text-xl font-bold rounded-full border-2 border-t-pink-700  border-l-pink-700  border-r-pink-700  border-b-pink-700 border-dotted">
           <span className=' text-pink-700 font-serif text-2xl'>{currentUser?.userName?.[0]}</span>
         </div>
       ) : (
@@ -60,39 +63,76 @@ const Header = () => {
           img={`http://localhost:3000${currentUser?.profile}`}
           rounded
           bordered
+         
         />
       )
     }
     alt="hello"
   >
 
-          <Dropdown.Header className='flex flex-col'>
-          <FaUserEdit size={20} className='ml-[76px] absolute top-12 h-5 w-5 rounded-full bg-gray-400 pl-1 text-pink-700' />
-          
-          {
-      currentUser?.profile === defaultProfileImage ? (
-        <div className="ml-10 flex items-center justify-center h-14 w-14 bg-gray-400 text-white text-xl font-bold rounded-full border-2 border-t-pink-700  border-l-pink-700  border-r-pink-700  border-b-pink-700">
-          <span className=' text-pink-700 font-serif text-2xl'>{currentUser?.userName?.[0]}</span>
-        </div>        
-      ) : (
-        <Avatar
-          img={`http://localhost:3000${currentUser?.profile}`}
-          rounded
-          bordered
-        
-        />
-      )
-    }
-            <span className='font-bold font-serif ml-14 py-3'>{currentUser.userName}</span>
-            <span className='font-serif font-bold flex gap-2'><span className='text-pink-700 text-2xl'><MdAttachEmail /></span>{currentUser.email}</span>
-          </Dropdown.Header>
-          {currentUser?.roles !== "User" ?
-          <Link to={currentUser?.roles === "Admin" ? "/Dashboard?tab=profile" : "/DashboardFaculty?tab=profile"}>
-                 <Dropdown.Item><FaUser className='text-2xl  text-pink-700 '/> <span className='ml-2 font-serif'>Profile</span></Dropdown.Item>
-</Link> :
-<Link to={currentUser?.roles === "User" ? "/DashboardUser?tab=profile" : ""}>
-  <Dropdown.Item><CgProfile className='text-2xl  text-pink-700'/><span className='ml-2 font-serif'>Profile</span></Dropdown.Item>
-</Link>}
+<Dropdown.Header
+  className="w-64 m-3 flex flex-col items-center gap-2 p-4 border-t-4 border-b rounded-lg  border-pink-200 rounded-t-xl shadow-md bg-gradient-to-r from-pink-50 to-purple-100 dark:from-gray-800 dark:to-gray-900"
+>
+  {currentUser?.profile === defaultProfileImage ? (
+    <motion.div
+      initial={{ scale: 0.8, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ type: 'spring', stiffness: 200, damping: 10 }}
+      className="flex items-center justify-center h-16 w-16 bg-white text-pink-700 text-2xl font-bold rounded-full border-4 border-pink-600 shadow-lg"
+    >
+      {currentUser?.userName?.[0]}
+    </motion.div>
+  ) : (
+    <motion.div
+      initial={{ rotateY: 90 }}
+      animate={{ rotateY: 0 }}
+      transition={{ duration: 0.6, ease: 'easeOut' }}
+    >
+      <Avatar
+        img={`http://localhost:3000${currentUser?.profile}`}
+        rounded
+        bordered
+       
+      />
+    </motion.div>
+  )}
+
+  <motion.span
+    className="font-bold font-serif text-lg text-gray-800 dark:text-white text-center"
+    initial={{ y: 20, opacity: 0 }}
+    animate={{ y: 0, opacity: 1 }}
+    transition={{ delay: 0.2 }}
+  >
+    {currentUser.userName}
+  </motion.span>
+
+  <motion.span
+    className="font-serif font-medium text-sm flex items-center gap-2 text-gray-600 dark:text-gray-300"
+    initial={{ y: 20, opacity: 0 }}
+    animate={{ y: 0, opacity: 1 }}
+    transition={{ delay: 0.3 }}
+  >
+    <MdAttachEmail className="text-pink-700 text-xl" />
+    {currentUser.email}
+  </motion.span>
+</Dropdown.Header>
+
+<Dropdown.Item
+  as={Link}
+  to={
+    currentUser?.roles === "Admin" ? "/Dashboard?tab=profile" :
+    currentUser?.roles === "Advisor" ? "/DashboardAdvisor?tab=profile" :
+    currentUser?.roles === "User" ? "/DashboardUser?tab=profile" :
+    "/DashboardFaculty?tab=profile"
+  }
+>
+  {currentUser?.roles === "User" ? (
+    <CgProfile className='text-2xl text-pink-700' />
+  ) : (
+    <FaUser className='text-2xl text-pink-700' />
+  )}
+  <span className='ml-2 font-serif'>Profile</span>
+</Dropdown.Item>
 
 
           <DropdownDivider />

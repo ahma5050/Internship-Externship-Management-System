@@ -7,6 +7,11 @@ import {
       approveUser,
       getPendingFacultyByAdmin,
       getPendingFacuity,
+      getApprovedFaculty,
+      pendingAdvisor,
+      approveAdvisor,
+      ApprovedAdvisor,
+     
     } from "../Controllers/AuthConteroller.js";
     
 import upload from "../middlewares/upload.js";
@@ -32,6 +37,13 @@ router.get("/pending", verifyUser, getPendingFacultyByAdmin);
 // Admin-only: approve a specific user
 router.put("/approve/:id", verifyUser, verifyAdmin, approveUser);
 router.get('/faculty-status/:facultyId', getPendingFacuity);
+router.get("/approved-faculty", getApprovedFaculty);
+router.get('/pendingAdvisor', pendingAdvisor); // ✅ get all pending advisors
+router.put('/approveAdvisor', approveAdvisor);
+router.get('/approved-advisors', ApprovedAdvisor);
+
+//router.put('/approve-advisor/:id', verifyAdmin, approveAdvisor);
+
 
 export default router;
 

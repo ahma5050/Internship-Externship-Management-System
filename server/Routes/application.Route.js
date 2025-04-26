@@ -2,13 +2,15 @@ import express from "express";
 import upload from "../middlewares/upload.js";
 import {
   createApplication,
-  getApplications,
+  getPendingApplications,
   approveApplication,
   rejectApplication,  // Import rejectApplication controller
   getApprovedApplications,
   getFacultyStats,
   getrejectedApplications,
   getApplicationsByStatus,
+  gettouserPendingApplications,
+  getApprovedtouserUserApplications,
   
 } from "../Controllers/applicationController.js";
 
@@ -26,7 +28,7 @@ router.post(
 );
 
 // 🔽 Get all applications (with optional query filters like status, facultyId, etc.)
-router.get("/", getApplications);
+router.get("/", getPendingApplications);
 
 // 🔽 Faculty approves an application
 router.put("/:id/approve", approveApplication);
@@ -41,5 +43,7 @@ router.get("/facultyStats", getFacultyStats);
 router.get("/approved", getApprovedApplications);
 router.get("/rejected", getrejectedApplications);
 router.get("/", getApplicationsByStatus);
+router.get("/ApplicantPendingfrouser", gettouserPendingApplications);
+router.get("/ApplicantApprovedforuser", getApprovedtouserUserApplications);
 
 export default router;

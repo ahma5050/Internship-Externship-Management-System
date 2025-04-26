@@ -12,7 +12,7 @@ font-bold
 font-semibold
 }
 
-@keyframes float {
+/* @keyframes float {
       0%, 100% {
           transform: translateY(0);
       }
@@ -53,4 +53,10 @@ font-semibold
       stroke-dasharray: 1000;
       stroke-dashoffset: 1000;
       animation: draw 2s ease-in-out forwards;
+  } */
+
+  html, body, #root {
+    height: 100%;
+    overflow-x: hidden;
   }
+  

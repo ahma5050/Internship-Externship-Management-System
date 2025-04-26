@@ -7,6 +7,8 @@ import ProgramsManagment from '../components/ProgramsManagment';
 import Assigning from '../components/Assigning';
 import ReportAnalytics from '../components/ReportAnalytics';
 import AdminDashboard from '../components/AdminDashboard';
+import ApprovedFacality from '../components/ApprovedFacality';
+import ApprovedAdvisor from '../components/ApprovedAdvisor';
 
 
 const Dashboard = () => {
@@ -21,7 +23,7 @@ const Dashboard = () => {
   console.log("ppppppp", tab)
   return (
     <div className='min-h-screen flex flex-col md:flex-row'>
-     <div className="w-full md:w-80">
+     <div className="w-full md:w-80 shadow-sm shadow-black/60 dark:border-none">
     <DashSidebasr />
     </div>
     <div className="flex-1 p-4 mx-5">
@@ -30,6 +32,9 @@ const Dashboard = () => {
     <div className=''>{tab==="program" && <ProgramsManagment />}</div>
     <div className=''>{tab==="assign" && <Assigning />}</div>
     <div className=''>{tab==="report" && <ReportAnalytics />}</div>
+    <div className=''>{tab==="ApprovedFacality" && <ApprovedFacality />}</div>
+    <div className=''>{tab === "ApprovedAdvisor" && <ApprovedAdvisor />}</div>
+  
 </div>
  
     </div>

@@ -29,7 +29,7 @@ const ApprovedAttendance = () => {
       </h2>
 
       {attendances.length === 0 ? (
-        <p className="text-center text-lg text-gray-500 dark:text-gray-400">
+        <p className="text-lg text-gray-500 dark:text-gray-400 ">
           No approved attendance records available.
         </p>
       ) : (

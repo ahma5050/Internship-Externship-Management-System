@@ -6,10 +6,6 @@ import mongoose from "mongoose";
 
 export const SignUp = async (req, res, next) => {
   const { userName, email, password, roles } = req.body;
-  console.log("userName", userName);
-  console.log("email", email);
-  console.log("password", password);
-  console.log("roles", roles);
 
   try {
     if (!userName || !email || !password || !roles) {
@@ -31,11 +27,9 @@ export const SignUp = async (req, res, next) => {
       roles,
     };
 
-    if (roles === "Faculty" || roles === "faculty") {
-      newUserData.status = "pending"; // Only status, no adminId
-    }
-
-    if (roles === "Admin" || roles === "admin") {
+    // Apply pending status for Faculty, Admin, and Advisor
+    const lowerCaseRole = roles.toLowerCase();
+    if (["faculty", "admin", "advisor"].includes(lowerCaseRole)) {
       newUserData.status = "pending";
     }
 
@@ -47,7 +41,7 @@ export const SignUp = async (req, res, next) => {
     res.status(201).json({
       message:
         "User created successfully" +
-        (roles.toLowerCase() !== "user" ? ". Awaiting admin approval." : "."),
+        (lowerCaseRole !== "user" ? ". Awaiting admin approval." : "."),
       user: userWithoutPassword,
     });
   } catch (error) {
@@ -66,7 +60,7 @@ export const SignIn = async (req, res, next) => {
       return next(ErrorHandler(400, "All fields are required ***"));
     }
     const user = await UserModel.findOne({ email });
-    console.log("userroles", user.roles);
+    console.log("userroles", user);
     if (!user) {
       return next(ErrorHandler(401, "no email user from signin ***"));
     }
@@ -180,3 +174,98 @@ export const getPendingFacuity = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const getApprovedFaculty = async (req, res) => {
+  try {
+    const facultyList = await UserModel.find({
+      roles: "Faculty",
+      status: "approved",
+    }).select("-password"); // exclude password
+
+    res.status(200).json({ faculty: facultyList });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+export const pendingAdvisor = async (req, res, next) => {
+  try {
+    const advisors = await UserModel.find({
+      roles: "Advisor",
+      status: "pending",
+    });
+
+    res.status(200).json(advisors);
+  } catch (error) {
+    console.error("Error fetching pending advisors:", error);
+    next(error);
+  }
+};
+
+export const approveAdvisor = async (req, res, next) => {
+  const { advisorId, AdminId } = req.body;
+ 
+  console.log("AdminId", AdminId);
+
+  try {
+    if (!advisorId || !AdminId) {
+      return res.status(400).json({ message: "Advisor ID and Admin ID are required" });
+    }
+
+    const advisor = await UserModel.findOneAndUpdate(
+      { _id: advisorId, roles: "Advisor", status: "pending" },
+      { $set: { status: "approved", approvedBy: AdminId } },
+      { new: true }
+    );
+
+    if (!advisor) {
+      return res.status(404).json({ message: "Advisor not found or already approved" });
+    }
+
+    res.status(200).json({ message: "Advisor approved successfully", advisor });
+  } catch (error) {
+    console.error("Error approving advisor:", error);
+    next(error);
+  }
+};
+
+
+export const ApprovedAdvisor = async (req, res) => {
+  try {
+    // Step 1: Fetch all approved advisors
+    const advisors = await UserModel.find({
+      roles: "Advisor", // note: capital 'A' to match your DB
+      status: "approved",
+    }).lean(); // plain objects
+
+    if (!advisors.length) {
+      return res.status(404).json({ message: "No approved advisors found." });
+    }
+
+    // Step 2: Fetch one approved admin (or you can change to find many if needed)
+    const admin = await UserModel.findOne({
+      roles: "Admin",
+      status: "approved",
+    }).select("_id userName email profile").lean();
+
+    if (!admin) {
+      return res.status(404).json({ message: "No approved admin found." });
+    }
+
+    // Step 3: Attach this admin as 'approvedBy' for each advisor (simulate approval)
+    const advisorsWithAdmin = advisors.map(advisor => ({
+      ...advisor,
+      approvedBy: admin,
+    }));
+
+    // Step 4: Return
+    return res.status(200).json({ advisors: advisorsWithAdmin });
+  } catch (error) {
+    console.error("Error fetching advisors:", error);
+    return res.status(500).json({ message: "Server error while fetching advisors." });
+  }
+};
+
+
+
+

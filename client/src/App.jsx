@@ -6,9 +6,11 @@ import Dashboard from "./pages/Dashboard";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Header from "./components/Header";
+import PrivetRoute from "./components/PrivetRoute";
+import PrivetRouteForAdvisor from "./components/PrivetRouteForAdvisor";
 import Footers from "./components/Footers";
 import DashboardUser from "./pages/DashboardUser";
-import DashboardMentor from "./pages/DashboardMentor";
+import DashboardAdvisor from "./pages/DashboardAdvisor";
 import DashboardFaculty from "./pages/DashboardFaculty";
 import Service from "./pages/Service";
 import DashPosts from "./pages/DashPosts";
@@ -18,6 +20,7 @@ import ApprovedUser from "./pages/ApprovedUser";
 import RejectedUser from "./pages/RejectedUser";
 import ApprovedAttendance from "./pages/ApprovedAttendance";
 import RejectedAttendance from "./pages/RejectedAttendance";
+
 
 
 const App = () => {
@@ -32,8 +35,12 @@ const App = () => {
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/About" element={<About />} />
         <Route path="/DashboardUser" element={<DashboardUser />} />
-        <Route path="/DashboardMentor" element={<DashboardMentor />} />
+        <Route element={<PrivetRoute />}>
         <Route path="/DashboardFaculty" element={<DashboardFaculty />} />
+        </Route>
+        <Route element={<PrivetRouteForAdvisor />}>
+        <Route path="/DashboardAdvisor" element={<DashboardAdvisor />} />
+        </Route>
         <Route path="/DashPosts" element={<DashPosts />} />
         <Route path="/UpdatePosts/:postId" element={<UpdatePosts />} />
         <Route path="/ApplayInter" element={<ApplayInter />} />

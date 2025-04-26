@@ -1,5 +1,5 @@
 import Application from "../Models/Application.js";
-
+import mongoose from "mongoose";
 export const createApplication = async (req, res) => {
   try {
     const {
@@ -53,7 +53,8 @@ export const createApplication = async (req, res) => {
       about,
       facultyId,
       applicantId, 
-      postId
+      postId,
+       status: "pending"
     });
 
     const saved = await application.save();
@@ -68,7 +69,7 @@ export const createApplication = async (req, res) => {
 
 
 
-export const getApplications = async (req, res) => {
+export const getPendingApplications = async (req, res) => {
   try {
     const { status, facultyId } = req.query;
    
@@ -320,3 +321,61 @@ export const getApplicationsByStatus = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+//for user dashboard
+
+export const gettouserPendingApplications = async (req, res) => {
+  try {
+    const { status, applicantId } = req.query;
+
+    if (!applicantId || !mongoose.Types.ObjectId.isValid(applicantId)) {
+      return res.status(400).json({ message: "Invalid applicantId" });
+    }
+
+    const query = {
+      applicantId: new mongoose.Types.ObjectId(applicantId),
+    };
+    if (status) {
+      query.status = status;
+    }
+
+    const applications = await Application.find(query)
+      .populate({
+        path: "postId",
+        select: "title", // only fetching post title for user UI
+      })
+      .sort({ createdAt: -1 });
+
+    res.status(200).json(applications);
+  } catch (err) {
+    console.error("Error fetching user applications:", err);
+    res.status(500).json({
+      message: "Failed to fetch user applications",
+      error: err.message,
+    });
+  }
+};
+
+// GET /api/applicationRoute/user-applications?applicantId=...
+export const getApprovedtouserUserApplications = async (req, res) => {
+  try {
+    const { applicantId } = req.query;
+
+    if (!applicantId) {
+      return res.status(400).json({ message: "Missing applicantId" });
+    }
+
+    const applications = await Application.find({
+      applicantId,
+      status: "approved", // ✅ Only fetch approved applications
+    })
+      .populate("postId") // include post details
+      .sort({ createdAt: -1 });
+
+    res.status(200).json(applications);
+  } catch (error) {
+    console.error("Error fetching approved user applications:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+

@@ -6,7 +6,7 @@ const Footers = () => {
   return (
     <Footer className="">
       <div className="w-full">
-        <div className="lg:flex justify-between px-5 items-center">
+        <div className="lg:flex justify-between px-5 items-center border-t-black/30 dark:border-none">
           <div className="flex flex-col items-center py-5 text-gray-500 dark:text-white font-serif">
             <Link to="/" className="text-xl font-semibold font-serif">
               <span className="text-3xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white px-3 py-0.5 self-center font-bold">

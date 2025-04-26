@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { HiArrowSmRight, HiChartPie, HiDocument, HiDocumentText, HiUser } from 'react-icons/hi'
 import { RiMiniProgramFill } from "react-icons/ri";
+import { MdOutlineMapsHomeWork } from "react-icons/md";
 import { CgAssign } from "react-icons/cg";
 import { GiProgression } from "react-icons/gi";
 import { useSelector } from 'react-redux'
@@ -22,6 +23,7 @@ import { TbWorldSearch } from "react-icons/tb";
 import { LuNotebookPen } from "react-icons/lu";
 import { GrAnalytics } from "react-icons/gr";
 import { LuNotebookText } from "react-icons/lu";
+import { GrUserManager } from "react-icons/gr";
 
 
 
@@ -39,16 +41,19 @@ const DashSidebasr = () => {
   return (
     <Sidebar className='w-full md:w-50 rounded-lg '> 
       <SidebarItems>
-<SidebarItemGroup className='flex flex-col gap-3 '>
-{currentUser?.roles==="Admin" && <span className='font-bold'>
+<SidebarItemGroup className='flex flex-col gap-3'>
+{currentUser?.roles==="Admin" && <span className='font-bold flex flex-col gap-2'>
       <Link to="/Dashboard?tab=dash"><SidebarItem active={tab==="dash"} icon={HiChartPie} as="div" className=' font-serif'>Dashboard</SidebarItem></Link>
       <Link to="/Dashboard?tab=profile"><SidebarItem active={tab==="profile"} icon={HiUser} as="div" className=' font-serif' label={currentUser.roles}>profile</SidebarItem></Link>
       <Link to="/Dashboard?tab=program"><SidebarItem active={tab==="program"} icon={RiMiniProgramFill} as="div" className=' font-serif'>ProgramsManagment</SidebarItem></Link>
-      <Link to="/Dashboard?tab=assign"><SidebarItem active={tab==="assign"} icon={CgAssign } as="div" className=' font-serif'>Assign Mentor  & Approvement</SidebarItem></Link>
+      <Link to="/Dashboard?tab=assign"><SidebarItem active={tab==="assign"} icon={CgAssign } as="div" className=' font-serif'>Assign Advisor  & Approvement</SidebarItem></Link>
       <Link to="/Dashboard?tab=report"><SidebarItem active={tab==="report"} icon={GiProgression } as="div" className=' font-serif'>Reports & Analytics</SidebarItem></Link>
+      <Link to="/Dashboard?tab=ApprovedFacality"><SidebarItem active={tab==="ApprovedFacality"} icon={MdOutlineMapsHomeWork  } as="div" className=' font-serif'>Approved Fcality</SidebarItem></Link>
+      <Link to="/Dashboard?tab=ApprovedAdvisor"><SidebarItem active={tab==="ApprovedAdvisor"} icon={GrUserManager  } as="div" className=' font-serif'>Approved Advisors</SidebarItem></Link>
       </span>}
 
       {currentUser.roles==="User" && <span className='flex flex-col gap-2'>
+           
       <Link to="/DashboardUser?tab=UserDashboard"><SidebarItem active={tab==="UserDashboard"} icon={HiChartPie} as="div" className=' font-serif'>DashboardUser</SidebarItem></Link>
       <Link to="/DashboardUser?tab=profile"><SidebarItem active={tab==="profile"} icon={HiUser} as="div" label={currentUser.roles} className=' font-serif'>profile</SidebarItem></Link>
       <Link to="/DashboardUser?tab=search"><SidebarItem active={tab==="search"} icon={TbWorldSearch } as="div" className=' font-serif'>SearchOppPosted</SidebarItem></Link>
@@ -57,13 +62,14 @@ const DashSidebasr = () => {
       <Link to="/DashboardUser?tab=gread"><SidebarItem active={tab==="gread"} icon={GrAnalytics } as="div" className=' font-serif'>GreadReport</SidebarItem></Link>
       </span>}
 
-      {currentUser.roles==="Adviser" && <>
-      <Link to="/DashboardMentor?tab=MentorDashboard"><SidebarItem active={tab==="MentorDashboard"} icon={HiChartPie} as="div className=' font-serif'">MentorDashboard</SidebarItem></Link>
-      <Link to="/DashboardMentor?tab=profile"><SidebarItem active={tab==="profile"} icon={HiUser} as="div" className=' font-serif' label={currentUser.roles}>profile</SidebarItem></Link>
-      <Link to="/DashboardMentor?tab=Monitoring"><SidebarItem active={tab==="Monitoring"} icon={RiProgress5Line } as="div" className=' font-serif'>Progress Monitoring </SidebarItem></Link>
-      <Link to="/DashboardMentor?tab=Communication"><SidebarItem active={tab==="Communication"} icon={RiCalendarScheduleFill } as="div" className=' font-serif'>Communication & Scheduling</SidebarItem></Link>
-      <Link to="/DashboardMentor?tab=Reporting"><SidebarItem active={tab==="Reporting"} icon={SiGoogleanalytics } as="div" className=' font-serif'>Reporting & Analytics</SidebarItem></Link>
-      </>}
+
+      {currentUser.roles==="Advisor" &&<span className='font-bold flex flex-col gap-2'>
+      <Link to="/DashboardAdvisor?tab=AdvisorDashboard"><SidebarItem active={tab==="AdvisorDashboard"} icon={HiChartPie} as="div" className=' font-serif' >AdvisorDashboard</SidebarItem></Link>
+      <Link to="/DashboardAdvisor?tab=profile"><SidebarItem active={tab==="profile"} icon={HiUser} as="div" className=' font-serif' label={currentUser.roles}>profile</SidebarItem></Link>
+      <Link to="/DashboardAdvisor?tab=Monitoring"><SidebarItem active={tab==="Monitoring"} icon={RiProgress5Line } as="div" className=' font-serif'>Progress Monitoring </SidebarItem></Link>
+      <Link to="/DashboardAdvisor?tab=Communication"><SidebarItem active={tab==="Communication"} icon={RiCalendarScheduleFill } as="div" className=' font-serif'>Communication & Scheduling</SidebarItem></Link>
+      <Link to="/DashboardAdvisor?tab=Reporting"><SidebarItem active={tab==="Reporting"} icon={SiGoogleanalytics } as="div" className=' font-serif'>Reporting & Analytics</SidebarItem></Link>
+      </span>}
 
       {currentUser.roles==="Faculty" && <span className='flex flex-col gap-3'>
       <Link to="/DashboardFaculty?tab=FacultyDashboard"><SidebarItem active={tab==="FacultyDashboard"} icon={RiSchoolLine} as="div" className=' font-serif'>FacultyDashboard</SidebarItem></Link>
