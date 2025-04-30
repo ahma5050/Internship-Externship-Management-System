@@ -44,6 +44,8 @@ const Header = () => {
         <Navbar.Link  as="div" active={path === '/'}><Link to="/" className="font-serif text-lg">Home</Link></Navbar.Link>
         <Navbar.Link as="div" active={path === '/About'}><Link to="/About" className="font-serif text-lg">About</Link></Navbar.Link>
         <Navbar.Link as="div" active={path === '/Service'}><Link to="/Service" className="font-serif text-lg">Service</Link></Navbar.Link>
+        <Navbar.Link as="div" active={path === '#'}>{ currentUser && currentUser.applicationStatus==="approved" && (<span className="font-serif text-lg bg-green-200 p-1 rounded-lg border text-blue-900">verifed </span>)}</Navbar.Link>
+   
       </Navbar.Collapse>
       <div className='hidden md:block' onClick={darkModehandle}>
         {darkMode ? <MdLightMode size={27} /> : <MdDarkMode size={27} />}

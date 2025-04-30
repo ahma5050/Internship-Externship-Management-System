@@ -7,12 +7,11 @@ import { CheckCircle, Mail, University, Briefcase } from 'lucide-react';
 import { IoCalendarOutline } from "react-icons/io5";
 import { SiNike } from "react-icons/si";
 import { CgOrganisation } from "react-icons/cg";
-import UserattendanceApp from './UserattendanceApp';
+import UserNormalpending from './UserNormalpending';
 
 const UserDashboard = () => {
   const [applications, setApplications] = useState([]);
   const [approvedUsers, setApprovedUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [selectedApp, setSelectedApp] = useState(null);
   const { currentUser } = useSelector((state) => state.user);
 
@@ -27,38 +26,34 @@ const UserDashboard = () => {
       } catch (err) {
         console.error("Error fetching pending applications:", err);
         setApplications([]);
-      } finally {
-        setLoading(false);
       }
     };
     fetchApplications();
   }, [currentUser]);
 
   // Fetch approved applications submitted by the user
- // Fetch approved applications submitted by the user
-useEffect(() => {
-  const fetchApprovedUsers = async () => {
-    try {
-      const url = `/api/applicationRoute/ApplicantApprovedforuser?applicantId=${currentUser._id}`;
-      const res = await fetch(url);
-      const data = await res.json();
-      setApprovedUsers(Array.isArray(data) ? data : []);
-    } catch (err) {
-      console.error("Error fetching approved applications:", err);
-    }
-  };
-  fetchApprovedUsers();
-}, [currentUser]);
-
+  useEffect(() => {
+    const fetchApprovedUsers = async () => {
+      try {
+        const url = `/api/applicationRoute/ApplicantApprovedforuser?applicantId=${currentUser._id}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        setApprovedUsers(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error("Error fetching approved applications:", err);
+      }
+    };
+    fetchApprovedUsers();
+  }, [currentUser]);
 
   const handlePage = (app) => setSelectedApp(app);
   const handleClosePage = () => setSelectedApp(null);
 
   return (
-    <div className="px-4 max-w-8xl mx-auto">
-      {loading ? (
-        <p className="text-center">Loading...</p>
-      ) : selectedApp ? (
+    <div className="">
+     <UserNormalpending />
+     <div className="px-4 max-w-8xl mx-auto">
+      {selectedApp ? (
         <div className="bg-white dark:bg-gray-900 p-4 rounded-xl my-8 text-gray-800 dark:text-gray-200">
           <div className="flex justify-between">
             <h2 className="text-3xl font-bold font-serif">Application Details</h2>
@@ -114,57 +109,12 @@ useEffect(() => {
           </div>
         </div>
       ) : (
-        <div className="mt-12 w-full">
-          <h2 className="text-4xl font-bold mb-4 ml-20">Approved Applications</h2>
-          {approvedUsers.length === 0 ? (
-            <p className="ml-20">No approved applications found.</p>
-          ) : (
-            <div className="flex flex-col gap-6 w-full">
-              {approvedUsers.map(user => (
-                <motion.div
-                  key={user._id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow w-full border border-gray-500"
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-bold text-xl text-green-400">{user.firstName} {user.lastName}</h3>
-                    <CheckCircle className="text-green-500 h-6 w-6" />
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm text-gray-700 dark:text-gray-300">
-                    <p className="flex items-center">
-                      <Mail className="inline mr-2 bg-gray-500 h-10 w-10 p-2 rounded-full text-purple-800" />
-                      {user.email}
-                    </p>
-                    <p className="flex items-center">
-                      <University className="inline mr-2 bg-gray-500 h-10 w-10 p-2 rounded-full text-cyan-500" />
-                      {user.university}
-                    </p>
-                    <p className="flex items-center">
-                      <Briefcase className="inline mr-2 bg-gray-500 h-10 w-10 p-2 rounded-full text-red-950" />
-                      {user.position}
-                    </p>
-                    <p className="flex items-center">
-                      <IoCalendarOutline className="inline mr-2 bg-gray-500 h-10 w-10 p-2 rounded-full text-rose-800" />
-                      {user.duration}
-                    </p>
-                    <p className="flex items-center">
-                      <CgOrganisation className="inline mr-2 bg-gray-500 h-10 w-10 p-2 rounded-full text-lime-500" />
-                      Faculty Approved: {user.facultyApproved ? 'Yes' : 'No'}
-                    </p>
-                    <p className="flex items-center">
-                      <SiNike className="inline mr-2 bg-gray-500 h-10 w-10 p-2 rounded-full text-green-900" />
-                      <span className="ml-1 font-medium">{user.status}</span>
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          )}
+        <div className=" w-full">
         </div>
       )}
+      </div>
 
-      <UserattendanceApp />
+     
     </div>
   );
 };

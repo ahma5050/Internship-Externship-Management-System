@@ -26,9 +26,7 @@ const ApprovedUser = () => {
   return (
     <div className={`min-h-screen p-6 transition-all ${darkMode ? "bg-gradient-to-br from-gray-900 to-gray-800 text-white" : "bg-gradient-to-br from-gray-50 to-gray-100 text-gray-900"}`}>
       <div className="max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
+        <div
           className="text-center mb-12"
         >
           <h2 className="text-4xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600">
@@ -37,7 +35,7 @@ const ApprovedUser = () => {
           <p className={`max-w-2xl mx-auto ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
             Congratulations to all approved members! Welcome to our community.
           </p>
-        </motion.div>
+        </div>
 
         {approvedUsers.length === 0 ? (
           <div className="text-center py-12">

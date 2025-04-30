@@ -133,10 +133,9 @@ export const RejectedAttendance = async (req, res) => {
 
 // Example: GET pending with applicantId
 export const UserpendingAtte = async (req, res) => {
-  const { facultyId, applicantId } = req.query;
+  const { applicantId } = req.query;
   try {
     const records = await Attendance.find({
-      facultyId,
       applicantId,
       status: 'pending'
     });
@@ -148,10 +147,9 @@ export const UserpendingAtte = async (req, res) => {
 
 // Same for /approved
 export const UserapprovedAtte = async (req, res) => {
-  const { facultyId, applicantId } = req.query;
+  const { applicantId } = req.query;
   try {
     const records = await Attendance.find({
-      facultyId,
       applicantId,
       status: 'approved'
     });

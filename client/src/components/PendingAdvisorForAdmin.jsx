@@ -17,7 +17,7 @@ const PendingAdvisorForAdmin = () => {
     setLoading(true);
     try {
       const res = await fetch('/api/AuthRoute/pendingAdvisor');
-      console.log("res", res)
+     
       const data = await res.json();
       setPendingAdvisors(data);
     } catch (err) {

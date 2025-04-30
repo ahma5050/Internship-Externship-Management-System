@@ -14,6 +14,7 @@ import {
 import { ThemContext } from "../context/ThemContext";
 import { FaQuoteRight } from "react-icons/fa";
 import PendingAdvisorForAdmin from "./PendingAdvisorForAdmin";
+import ApprovedUserbyAdmin from "./ApprovedUserbyAdmin";
 
 
 const AdminDashboard = () => {
@@ -213,6 +214,7 @@ const AdminDashboard = () => {
         </div>
       </Card>
       <PendingAdvisorForAdmin />
+      <ApprovedUserbyAdmin />
  
     </div>
   );

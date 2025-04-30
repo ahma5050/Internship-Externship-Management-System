@@ -3,16 +3,13 @@ import { useSelector } from 'react-redux'
 import { Outlet } from 'react-router-dom'
 import UserDashboard from './UserDashboard';
 
-
 const PrivetRoute = () => {
   const { currentUser } = useSelector((state) => state.user);
 
-  if (currentUser.roles === "User" && currentUser.status === "pending") {
-    // Show only faculty dashboard if faculty and still pending
+  if (currentUser?.roles === "User" && currentUser?.userStatus === "pending") {
     return <UserDashboard />;
   }
 
-  // Otherwise, render the child route (Outlet)
   return <Outlet />;
 }
 

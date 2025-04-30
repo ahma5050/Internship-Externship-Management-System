@@ -11,6 +11,11 @@ import {
       pendingAdvisor,
       approveAdvisor,
       ApprovedAdvisor,
+      getpendingusertoAdmin,
+      approvePendingUserbyAdmin,
+      getApprovedUsersbyAdmin,
+      getUserStatusforUser,
+     
      
     } from "../Controllers/AuthConteroller.js";
     
@@ -41,6 +46,10 @@ router.get("/approved-faculty", getApprovedFaculty);
 router.get('/pendingAdvisor', pendingAdvisor); // ✅ get all pending advisors
 router.put('/approveAdvisor', approveAdvisor);
 router.get('/approved-advisors', ApprovedAdvisor);
+router.get('/pending-user-admin', getpendingusertoAdmin); // ✅ get all pending advisors
+router.put('/Approving-user-admin/:userId', approvePendingUserbyAdmin); // ✅ get all approving advisors
+router.get('/approved-user-admin', getApprovedUsersbyAdmin);
+router.get("/get-user-status/:userId", getUserStatusforUser);
 
 //router.put('/approve-advisor/:id', verifyAdmin, approveAdvisor);
 

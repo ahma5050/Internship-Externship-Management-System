@@ -1,423 +1,266 @@
-import React, { useContext, useState } from 'react';
+import React from 'react';
+import { Card } from 'flowbite-react';
 import { 
-  FiSun, FiMoon, FiDownload, FiPrinter, 
-  FiUser, FiCalendar, FiAward, FiBarChart2, 
-  FiPieChart, FiBriefcase, FiTrendingUp, FiUsers, FiLock 
-} from 'react-icons/fi';
-import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
-  PieChart, Pie, Cell, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar,
-  LineChart, Line, AreaChart, Area, ComposedChart
-} from 'recharts';
-import { ThemContext } from '../context/ThemContext';
+  Chart as ChartJS,
+  BarElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement
+} from 'chart.js';
+import { Bar, Line, Pie, Doughnut } from 'react-chartjs-2';
+import { 
+  BookOpenCheck, 
+  CalendarCheck, 
+  Clock, 
+  AlertTriangle,
+  Trophy,
+  TrendingUp,
+  UserCheck
+} from 'lucide-react';
+import { motion } from 'framer-motion';
+
+// Register ChartJS components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement
+);
 
 const GenerateReport = () => {
-  const [activeTab, setActiveTab] = useState('overview');
-  const [showAdminView, setShowAdminView] = useState(false);
-    const { darkModehandle, darkMode } = useContext(ThemContext);
-
-  // Sample student data
-  const students = [
-    {
-      id: 'S001',
-      name: 'John Doe',
-      department: 'Computer Science',
-      startDate: '2023-06-01',
-      endDate: '2023-08-31',
-      company: 'Tech Solutions Inc.',
-      supervisor: 'Jane Smith',
-      attendance: 92,
-      performance: 88,
-      skills: ['React', 'Node.js', 'MongoDB'],
-      tasksCompleted: 24,
-      totalTasks: 28,
-      evaluation: 'Excellent problem-solving skills and quick learner',
-      timeline: [
-        { week: 1, completion: 15 },
-        { week: 2, completion: 35 },
-        { week: 3, completion: 50 },
-        { week: 4, completion: 65 },
-        { week: 5, completion: 80 },
-        { week: 6, completion: 90 },
-        { week: 7, completion: 95 },
-        { week: 8, completion: 100 }
-      ]
-    },
-    {
-      id: 'S002',
-      name: 'Alice Johnson',
-      department: 'Business',
-      startDate: '2023-06-15',
-      endDate: '2023-09-15',
-      company: 'Global Finance',
-      supervisor: 'Robert Brown',
-      attendance: 95,
-      performance: 92,
-      skills: ['Marketing', 'Data Analysis', 'Excel'],
-      tasksCompleted: 30,
-      totalTasks: 30,
-      evaluation: 'Outstanding performance in client presentations',
-      timeline: [
-        { week: 1, completion: 20 },
-        { week: 2, completion: 45 },
-        { week: 3, completion: 60 },
-        { week: 4, completion: 75 },
-        { week: 5, completion: 85 },
-        { week: 6, completion: 95 },
-        { week: 7, completion: 98 },
-        { week: 8, completion: 100 }
-      ]
-    }
-  ];
-
-  // Collective analysis data for advisors/admins
-  const collectiveData = {
-    averagePerformance: 87.5,
-    averageAttendance: 92.3,
-    completionRate: 94.1,
-    skillDistribution: [
-      { name: 'Technical', value: 78 },
-      { name: 'Soft Skills', value: 85 },
-      { name: 'Communication', value: 82 },
-      { name: 'Initiative', value: 76 }
+  // Sample data - replace with your actual data
+  const attendanceData = {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    datasets: [
+      {
+        label: 'Attendance Rate',
+        data: [92, 88, 95, 90, 93, 97],
+        backgroundColor: 'rgba(59, 130, 246, 0.7)',
+        borderColor: 'rgba(59, 130, 246, 1)',
+        borderWidth: 1,
+      },
     ],
-    performanceTrend: [
-      { month: 'Jan', performance: 75 },
-      { month: 'Feb', performance: 78 },
-      { month: 'Mar', performance: 82 },
-      { month: 'Apr', performance: 85 },
-      { month: 'May', performance: 88 },
-      { month: 'Jun', performance: 90 }
-    ],
-    departmentComparison: [
-      { name: 'Computer Science', performance: 88, attendance: 93 },
-      { name: 'Business', performance: 85, attendance: 91 },
-      { name: 'Engineering', performance: 82, attendance: 89 }
-    ]
   };
 
-  // Chart data
-  const performanceData = students.map(student => ({
-    name: student.name,
-    performance: student.performance,
-    attendance: student.attendance,
-    completion: Math.round((student.tasksCompleted / student.totalTasks) * 100)
-  }));
+  const gradeData = {
+    labels: ['Math', 'Science', 'History', 'English', 'Art'],
+    datasets: [
+      {
+        label: 'Average Grade',
+        data: [85, 78, 92, 88, 95],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.7)',
+          'rgba(54, 162, 235, 0.7)',
+          'rgba(255, 206, 86, 0.7)',
+          'rgba(75, 192, 192, 0.7)',
+          'rgba(153, 102, 255, 0.7)',
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
 
-  const skillData = students.reduce((acc, student) => {
-    student.skills.forEach(skill => {
-      const existing = acc.find(item => item.skill === skill);
-      if (existing) existing.count++;
-      else acc.push({ skill, count: 1 });
-    });
-    return acc;
-  }, []);
+  const delinquencyData = {
+    labels: ['On Time', 'Late', 'Missing'],
+    datasets: [
+      {
+        label: 'Assignment Status',
+        data: [75, 15, 10],
+        backgroundColor: [
+          'rgba(75, 192, 192, 0.7)',
+          'rgba(255, 206, 86, 0.7)',
+          'rgba(255, 99, 132, 0.7)',
+        ],
+        borderColor: [
+          'rgba(75, 192, 192, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(255, 99, 132, 1)',
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
 
-  const weeklyCompletionData = students[0].timeline.map(week => ({
-    week: `Week ${week.week}`,
-    completion: week.completion
-  }));
+  const performanceTrendData = {
+    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+    datasets: [
+      {
+        label: 'Overall Performance',
+        data: [70, 78, 85, 88],
+        fill: false,
+        backgroundColor: 'rgba(153, 102, 255, 0.7)',
+        borderColor: 'rgba(153, 102, 255, 1)',
+        tension: 0.4,
+      },
+    ],
+  };
 
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+  const stats = [
+    { title: 'Overall Attendance', value: '92%', icon: <UserCheck className="w-6 h-6" />, change: '+2%' },
+    { title: 'Average Grade', value: '87.6', icon: <BookOpenCheck className="w-6 h-6" />, change: '+1.2' },
+    { title: 'On Time Assignments', value: '75%', icon: <Clock className="w-6 h-6" />, change: '-5%' },
+    { title: 'Behavior Incidents', value: '3', icon: <AlertTriangle className="w-6 h-6" />, change: '-2' },
+  ];
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900'}`}>
-      <div className="container mx-auto px-4 py-8 ">
-        {/* Header with Admin Access */}
-        <header className="flex justify-between items-center mb-8 ">
-          <h1 className="text-3xl font-bold">Internship Report</h1>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => setShowAdminView(!showAdminView)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300'}`}
+    <div className="p-6 min-h-screen">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <h1 className="text-3xl font-bold text-gray-800 mb-6 dark:text-gray-100 font-serif">Student Performance Dashboard</h1>
+        
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {stats.map((stat, index) => (
+            <motion.div
+              key={index}
+              whileHover={{ scale: 1.03 }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
-              <FiLock className="h-4 w-4" />
-              {showAdminView ? 'Student View' : 'Advisor View'}
-            </button>
-          </div>
-        </header>
-
-        {/* Main Content */}
-        {showAdminView ? (
-          /* ADMIN/ADVISOR VIEW */
-          <div className="space-y-8">
-            <h2 className="text-2xl font-bold flex items-center gap-2">
-              <FiUsers className="text-indigo-500" /> Collective Analysis
-            </h2>
-            
-            {/* Overview Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className={`p-6 rounded-lg shadow ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-                <h3 className="font-medium mb-2">Average Performance</h3>
-                <p className="text-3xl font-bold text-indigo-500">
-                  {collectiveData.averagePerformance}%
-                </p>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Across all students
-                </p>
-              </div>
-              
-              <div className={`p-6 rounded-lg shadow ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-                <h3 className="font-medium mb-2">Average Attendance</h3>
-                <p className="text-3xl font-bold text-green-500">
-                  {collectiveData.averageAttendance}%
-                </p>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Overall attendance rate
-                </p>
-              </div>
-              
-              <div className={`p-6 rounded-lg shadow ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-                <h3 className="font-medium mb-2">Completion Rate</h3>
-                <p className="text-3xl font-bold text-purple-500">
-                  {collectiveData.completionRate}%
-                </p>
-                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Tasks completed
-                </p>
-              </div>
-            </div>
-
-            {/* Department Comparison */}
-            <div className={`p-6 rounded-lg shadow ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-              <h3 className="text-xl font-semibold mb-4">Department Comparison</h3>
-              <div className="h-80">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={collectiveData.departmentComparison}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="performance" fill="#8884d8" name="Performance" />
-                    <Bar dataKey="attendance" fill="#82ca9d" name="Attendance" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            {/* Performance Trend */}
-            <div className={`p-6 rounded-lg shadow ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-              <h3 className="text-xl font-semibold mb-4">Performance Trend</h3>
-              <div className="h-80">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={collectiveData.performanceTrend}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip />
-                    <Line 
-                      type="monotone" 
-                      dataKey="performance" 
-                      stroke="#8884d8" 
-                      strokeWidth={2}
-                      dot={{ r: 4 }}
-                      activeDot={{ r: 6 }} 
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-          </div>
-        ) : (
-          /* STUDENT VIEW */
-          <div>
-            {/* Tabs */}
-            <div className="flex border-b mb-6">
-              <button
-                className={`px-4 py-2 font-medium ${activeTab === 'overview' ? 'border-b-2 border-indigo-500' : ''}`}
-                onClick={() => setActiveTab('overview')}
-              >
-                <FiBarChart2 className="inline mr-2" /> Overview
-              </button>
-              <button
-                className={`px-4 py-2 font-medium ${activeTab === 'students' ? 'border-b-2 border-indigo-500' : ''}`}
-                onClick={() => setActiveTab('students')}
-              >
-                <FiUser className="inline mr-2" /> Students
-              </button>
-              <button
-                className={`px-4 py-2 font-medium ${activeTab === 'details' ? 'border-b-2 border-indigo-500' : ''}`}
-                onClick={() => setActiveTab('details')}
-              >
-                <FiBriefcase className="inline mr-2" /> Details
-              </button>
-            </div>
-
-            {/* Overview Tab */}
-            {activeTab === 'overview' && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                {/* Performance Chart */}
-                <div className={`p-6 rounded-lg shadow ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-                  <h2 className="text-xl font-semibold mb-4 flex items-center">
-                    <FiBarChart2 className="mr-2" /> Performance Overview
-                  </h2>
-                  <div className="h-64">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <BarChart data={performanceData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Bar dataKey="performance" fill="#8884d8" />
-                        <Bar dataKey="attendance" fill="#82ca9d" />
-                      </BarChart>
-                    </ResponsiveContainer>
+              <Card className="hover:shadow-lg transition-shadow">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <p className="text-gray-500 text-sm font-medium">{stat.title}</p>
+                    <p className="text-2xl font-bold text-gray-800 mt-1">{stat.value}</p>
+                    <p className={`text-sm mt-1 ${stat.change.startsWith('+') ? 'text-green-500' : 'text-red-500'}`}>
+                      {stat.change} from last period
+                    </p>
+                  </div>
+                  <div className="p-3 rounded-full bg-blue-100 text-blue-600">
+                    {stat.icon}
                   </div>
                 </div>
-
-                {/* Skills Chart */}
-                <div className={`p-6 rounded-lg shadow ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-                  <h2 className="text-xl font-semibold mb-4 flex items-center">
-                    <FiPieChart className="mr-2" /> Skills Distribution
-                  </h2>
-                  <div className="h-64">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={skillData}
-                          cx="50%"
-                          cy="50%"
-                          labelLine={false}
-                          outerRadius={80}
-                          fill="#8884d8"
-                          dataKey="count"
-                          label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                        >
-                          {skillData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                          ))}
-                        </Pie>
-                        <Tooltip />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-
-                {/* Weekly Progress */}
-                <div className={`p-6 rounded-lg shadow ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-                  <h2 className="text-xl font-semibold mb-4 flex items-center">
-                    <FiTrendingUp className="mr-2" /> Weekly Progress
-                  </h2>
-                  <div className="h-64">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={weeklyCompletionData}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="week" />
-                        <YAxis domain={[0, 100]} />
-                        <Tooltip />
-                        <Area 
-                          type="monotone" 
-                          dataKey="completion" 
-                          stroke="#8884d8" 
-                          fill="#8884d8" 
-                          fillOpacity={0.2} 
-                        />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Students Tab */}
-            {activeTab === 'students' && (
-              <div className={`p-6 rounded-lg shadow ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-                <h2 className="text-xl font-semibold mb-4 flex items-center">
-                  <FiUser className="mr-2" /> Student List
-                </h2>
-                <div className="overflow-x-auto">
-                  <table className="min-w-full divide-y divide-gray-200">
-                    <thead>
-                      <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Student</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Company</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Performance</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Attendance</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200">
-                      {students.map(student => (
-                        <tr key={student.id}>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center">
-                              <div className="ml-4">
-                                <div className="text-sm font-medium">{student.name}</div>
-                                <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                                  {student.department}
-                                </div>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm">{student.company}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm">{student.performance}/100</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm">{student.attendance}%</div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            )}
-
-            {/* Details Tab */}
-            {activeTab === 'details' && (
-              <div className="space-y-6">
-                {students.map(student => (
-                  <div key={student.id} className={`p-6 rounded-lg shadow ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-                    <h2 className="text-xl font-semibold mb-2">{student.name}</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <h3 className="font-medium mb-1">Company</h3>
-                        <p>{student.company}</p>
-                      </div>
-                      <div>
-                        <h3 className="font-medium mb-1">Supervisor</h3>
-                        <p>{student.supervisor}</p>
-                      </div>
-                      <div>
-                        <h3 className="font-medium mb-1">Period</h3>
-                        <p>{student.startDate} to {student.endDate}</p>
-                      </div>
-                      <div>
-                        <h3 className="font-medium mb-1">Skills Developed</h3>
-                        <div className="flex flex-wrap gap-2">
-                          {student.skills.map(skill => (
-                            <span key={skill} className="px-2 py-1 text-xs rounded-full bg-indigo-100 text-indigo-800">
-                              {skill}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="mt-4">
-                      <h3 className="font-medium mb-1">Evaluation</h3>
-                      <p>{student.evaluation}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Footer with Export Options */}
-        <div className="mt-8 pt-6 border-t border-gray-200 flex justify-end gap-4">
-          <button className={`px-4 py-2 rounded-lg flex items-center gap-2 ${darkMode ? 'bg-indigo-700 hover:bg-indigo-600' : 'bg-indigo-600 hover:bg-indigo-700'} text-white`}>
-            <FiDownload /> Export {showAdminView ? 'Admin Report' : 'Student Report'}
-          </button>
-          <button className={`px-4 py-2 rounded-lg flex items-center gap-2 ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-300'}`}>
-            <FiPrinter /> Print
-          </button>
+              </Card>
+            </motion.div>
+          ))}
         </div>
-      </div>
+
+        {/* Main Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* Attendance Chart */}
+          <motion.div
+            whileHover={{ scale: 1.01 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          >
+            <Card className="h-full">
+              <div className="flex items-center mb-4">
+                <CalendarCheck className="w-8 h-8 mr-2 text-blue-600  bg-gray-400 p-1 rounded-full" />
+                <h2 className="text-xl font-semibold text-gray-800">Attendance Trend</h2>
+              </div>
+              <div className="h-80">
+                <Line 
+                  data={attendanceData}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                      y: {
+                        beginAtZero: false,
+                        min: 80,
+                        max: 100,
+                      },
+                    },
+                  }}
+                />
+              </div>
+            </Card>
+          </motion.div>
+
+          {/* Grade Distribution */}
+          <motion.div
+            whileHover={{ scale: 1.01 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          >
+            <Card className="h-full">
+              <div className="flex items-center mb-4">
+                <Trophy className="w-8 h-8 mr-2 text-yellow-600  bg-gray-400 p-1 rounded-full" />
+                <h2 className="text-xl font-semibold text-gray-800">Grade Distribution</h2>
+              </div>
+              <div className="h-80">
+                <Bar 
+                  data={gradeData}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                      y: {
+                        beginAtZero: true,
+                        max: 100,
+                      },
+                    },
+                  }}
+                />
+              </div>
+            </Card>
+          </motion.div>
+        </div>
+
+        {/* Secondary Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Delinquency Chart */}
+          <motion.div
+            whileHover={{ scale: 1.01 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          >
+            <Card className="h-full">
+              <div className="flex items-center mb-4">
+                <AlertTriangle className="w-8 h-8 mr-2 text-red-600 bg-gray-400 p-1 rounded-full" />
+                <h2 className="text-xl font-semibold text-gray-800">Assignment Compliance</h2>
+              </div>
+              <div className="h-80">
+                <Pie 
+                  data={delinquencyData}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                  }}
+                />
+              </div>
+            </Card>
+          </motion.div>
+
+          {/* Performance Trend */}
+          <motion.div
+            whileHover={{ scale: 1.01 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          >
+            <Card className="h-full">
+              <div className="flex items-center mb-4">
+                <TrendingUp className="w-8 h-8 mr-2 text-green-600 bg-gray-400 p-1 rounded-full" />
+                <h2 className="text-xl font-semibold text-gray-800">Performance Trend</h2>
+              </div>
+              <div className="h-80">
+                <Doughnut 
+                  data={performanceTrendData}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                  }}
+                />
+              </div>
+            </Card>
+          </motion.div>
+        </div>
+      </motion.div>
     </div>
   );
 };

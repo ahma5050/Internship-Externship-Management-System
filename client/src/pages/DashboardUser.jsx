@@ -12,6 +12,8 @@ import SearchOpporchinityPosted from '../components/SearchOpporchinityPosted';
 import ApplayInter from './ApplayInter';
 import GreadReport from '../components/GreadReport';
 import AttendanceReport from '../components/AttendanceReport';
+import ApprovedAttendance from './ApprovedAttendance';
+import UserattendanceApp from '../components/UserattendanceApp';
 
 
 const DashboardUser = () => {
@@ -40,6 +42,8 @@ const DashboardUser = () => {
       {tab === "progress" && <ProgressTracking />}
       {tab === "attendance" && <AttendanceReport />}
       {tab === "gread" && <GreadReport />}
+      {tab === "UserattendanceApp" && <UserattendanceApp />}
+   
     </div>
   </div>
   

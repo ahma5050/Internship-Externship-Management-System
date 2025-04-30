@@ -15,7 +15,7 @@ const SignUp = () => {
     password: "",
     roles: " ", // Default role
   });
-  console.log("formData", formData)
+  console.log("formData.......99999", formData)
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.id || e.target.name]: e.target.value });

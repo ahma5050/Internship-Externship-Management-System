@@ -30,7 +30,7 @@ const ApprovedAttendance = () => {
 
       {attendances.length === 0 ? (
         <p className="text-lg text-gray-500 dark:text-gray-400 ">
-          No approved attendance records available.
+          No approved attendance records available..
         </p>
       ) : (
         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">

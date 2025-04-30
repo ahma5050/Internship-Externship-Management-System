@@ -8,18 +8,29 @@ export const SignUp = async (req, res, next) => {
   const { userName, email, password, roles } = req.body;
 
   try {
+    // Validate required fields
     if (!userName || !email || !password || !roles) {
       return next(
         ErrorHandler(400, "All fields are required, including role.")
       );
     }
 
-    const existingUser = await UserModel.findOne({ email });
-    if (existingUser) return next(ErrorHandler(400, "User already exists."));
+    // Validate role
+    if (!["User", "Faculty", "Advisor", "Admin"].includes(roles)) {
+      return next(ErrorHandler(400, "Invalid role selected."));
+    }
 
+    // Check for existing user
+    const existingUser = await UserModel.findOne({ email });
+    if (existingUser) {
+      return next(ErrorHandler(400, "User already exists."));
+    }
+
+    // Hash password
     const salt = await bcryptjs.genSalt(10);
     const hashedPassword = await bcryptjs.hash(password, salt);
 
+    // Build new user object
     let newUserData = {
       userName,
       email,
@@ -27,21 +38,27 @@ export const SignUp = async (req, res, next) => {
       roles,
     };
 
-    // Apply pending status for Faculty, Admin, and Advisor
-    const lowerCaseRole = roles.toLowerCase();
-    if (["faculty", "admin", "advisor"].includes(lowerCaseRole)) {
+    if (roles === "User") {
+      // Students: set userStatus and applicationStatus
+      newUserData.userStatus = "pending";
+      newUserData.applicationStatus = "none";
+    } else {
+      // Faculty, Advisor, Admin: set status
       newUserData.status = "pending";
     }
 
+    // Save user
     const newUser = new UserModel(newUserData);
     await newUser.save();
 
+    // Return user without password
     const { password: _, ...userWithoutPassword } = newUser._doc;
-
     res.status(201).json({
       message:
         "User created successfully" +
-        (lowerCaseRole !== "user" ? ". Awaiting admin approval." : "."),
+        (roles === "User"
+          ? ""
+          : ". Awaiting admin approval."),
       user: userWithoutPassword,
     });
   } catch (error) {
@@ -265,6 +282,67 @@ export const ApprovedAdvisor = async (req, res) => {
     return res.status(500).json({ message: "Server error while fetching advisors." });
   }
 };
+//pendinguser to admin
+ export const getpendingusertoAdmin = async (req, res) => {
+  try {
+    const users = await UserModel.find({ userStatus: "pending", roles: "User" }).select("-password");
+    res.json({ users });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error fetching pending users" });
+  }
+};
+
+export const approvePendingUserbyAdmin = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.userStatus === "approved") {
+      return res.status(400).json({ message: "User is already approved" });
+    }
+
+    user.userStatus = "approved";  // Change status to approved
+    await user.save();
+
+    res.json({ message: "User approved successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error while approving user" });
+  }
+};
+
+export const getApprovedUsersbyAdmin = async (req, res) => {
+  try {
+    const users = await UserModel.find({ userStatus: "approved", roles: "User" }).select("-password");
+    res.json({ users });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error fetching approved users" });
+  }
+};
+
+export const getUserStatusforUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await UserModel.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error fetching user status" });
+  }
+};
+
 
 
 

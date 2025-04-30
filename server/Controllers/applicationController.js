@@ -1,4 +1,5 @@
 import Application from "../Models/Application.js";
+import UserModel from "../Models/UserModel.js";
 import mongoose from "mongoose";
 export const createApplication = async (req, res) => {
   try {
@@ -16,9 +17,9 @@ export const createApplication = async (req, res) => {
       endDate,
       duration,
       about,
-      facultyId, // poster
-      applicantId,    // applicant
-      postId     // internship post
+      facultyId, 
+      applicantId,    
+      postId     
     } = req.body;
 
     console.log("Received IDs ->", { facultyId, applicantId, postId });
@@ -27,10 +28,9 @@ export const createApplication = async (req, res) => {
     const coverLetter = req.files?.coverLetter?.[0]?.filename || null;
     const portfolio = req.files?.portfolio?.[0]?.filename || null;
 
-    // Validate required IDs
     if (!facultyId || !applicantId || !postId) {
       return res.status(400).json({
-        message: "Missing one or more required IDs: facultyId, userId, or postId.",
+        message: "Missing one or more required IDs: facultyId, applicantId, or postId.",
       });
     }
 
@@ -54,16 +54,19 @@ export const createApplication = async (req, res) => {
       facultyId,
       applicantId, 
       postId,
-       status: "pending"
+      status: "pending"
     });
 
-    const saved = await application.save();
-    res.status(201).json(saved);
+    const savedApplication = await application.save();
+
+    // ✅ Update user's applicationStatus after application is saved
+    await UserModel.findByIdAndUpdate(applicantId, { applicationStatus: "pending" });
+
+    res.status(201).json(savedApplication);
+
   } catch (error) {
     console.error("Error creating application:", error);
-    res
-      .status(500)
-      .json({ message: "Server error while submitting application." });
+    res.status(500).json({ message: "Server error while submitting application." });
   }
 };
 
@@ -103,6 +106,7 @@ export const getPendingApplications = async (req, res) => {
 };
 
 
+
 export const approveApplication = async (req, res) => {
   try {
     const { id } = req.params; // Application ID
@@ -130,14 +134,23 @@ export const approveApplication = async (req, res) => {
       return res.status(403).json({ message: "Unauthorized: You can only approve applications for your own posts." });
     }
 
-    // Update approval status
+    // Update application approval status
     application.facultyApproved = true;
     application.status = "approved";
-
     await application.save();
 
-    res.status(200).json(application);
-    
+    // ✨ Now update user's applicationStatus to "approved"
+    const user = await UserModel.findById(application.applicantId);
+    if (user) {
+      user.applicationStatus = "approved"; 
+      await user.save();
+    }
+
+    res.status(200).json({ 
+      message: "Application approved successfully.", 
+      application,
+      updatedUser: user 
+    });
 
   } catch (error) {
     console.error("Approval error:", error);

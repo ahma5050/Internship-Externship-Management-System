@@ -24,7 +24,8 @@ import { LuNotebookPen } from "react-icons/lu";
 import { GrAnalytics } from "react-icons/gr";
 import { LuNotebookText } from "react-icons/lu";
 import { GrUserManager } from "react-icons/gr";
-
+import { FaUserCheck } from "react-icons/fa6";
+import { BsFillBookmarkCheckFill } from "react-icons/bs";
 
 
 const DashSidebasr = () => {
@@ -50,16 +51,20 @@ const DashSidebasr = () => {
       <Link to="/Dashboard?tab=report"><SidebarItem active={tab==="report"} icon={GiProgression } as="div" className=' font-serif'>Reports & Analytics</SidebarItem></Link>
       <Link to="/Dashboard?tab=ApprovedFacality"><SidebarItem active={tab==="ApprovedFacality"} icon={MdOutlineMapsHomeWork  } as="div" className=' font-serif'>Approved Fcality</SidebarItem></Link>
       <Link to="/Dashboard?tab=ApprovedAdvisor"><SidebarItem active={tab==="ApprovedAdvisor"} icon={GrUserManager  } as="div" className=' font-serif'>Approved Advisors</SidebarItem></Link>
+      <Link to="/Dashboard?tab=ApprovedNormalUser"><SidebarItem active={tab==="ApprovedNormalUser"} icon={FaUserCheck  } as="div" className=' font-serif'>Approved User</SidebarItem></Link>
       </span>}
 
       {currentUser.roles==="User" && <span className='flex flex-col gap-2'>
            
-      <Link to="/DashboardUser?tab=UserDashboard"><SidebarItem active={tab==="UserDashboard"} icon={HiChartPie} as="div" className=' font-serif'>DashboardUser</SidebarItem></Link>
+      <Link to="/DashboardUser?tab=UserDashboard"><SidebarItem active={tab==="UserDashboard"} icon={HiChartPie} as="div" className=' font-serif'>UserDashboard</SidebarItem></Link>
       <Link to="/DashboardUser?tab=profile"><SidebarItem active={tab==="profile"} icon={HiUser} as="div" label={currentUser.roles} className=' font-serif'>profile</SidebarItem></Link>
       <Link to="/DashboardUser?tab=search"><SidebarItem active={tab==="search"} icon={TbWorldSearch } as="div" className=' font-serif'>SearchOppPosted</SidebarItem></Link>
+      {currentUser.roles==="User" && currentUser.applicationStatus==="approved" &&(<>
       <Link to="/DashboardUser?tab=progress"><SidebarItem active={tab==="progress"} icon={FaBarsProgress } as="div" className=' font-serif'>ProgressTracking</SidebarItem></Link>
       <Link to="/DashboardUser?tab=attendance"><SidebarItem active={tab==="attendance"} icon={LuNotebookPen  } as="div" className=' font-serif'>AttendanceReport</SidebarItem></Link>
+      <Link to="/DashboardUser?tab=UserattendanceApp"><SidebarItem active={tab==="UserattendanceApp"} icon={BsFillBookmarkCheckFill } as="div" className=' font-serif'>Approved Attendance</SidebarItem></Link>
       <Link to="/DashboardUser?tab=gread"><SidebarItem active={tab==="gread"} icon={GrAnalytics } as="div" className=' font-serif'>GreadReport</SidebarItem></Link>
+      </>)}
       </span>}
 
 

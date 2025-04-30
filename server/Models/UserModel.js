@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
 
+import mongoose from "mongoose";
 const UserSchema = new mongoose.Schema(
   {
     userName: { type: String, required: true },
@@ -7,7 +7,7 @@ const UserSchema = new mongoose.Schema(
     password: { type: String, required: true },
     roles: {
       type: String,
-      enum: ["User", "Faculty", "Advisor", "Admin"], // ← added "admin"
+      enum: ["User", "Faculty", "Advisor", "Admin"],
       default: "User",
     },
     profile: {
@@ -15,20 +15,29 @@ const UserSchema = new mongoose.Schema(
       default:
         "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
     },
+    // Used only for Faculty, Advisor, Admin
     status: {
       type: String,
       enum: ["pending", "approved", "rejected"],
     },
+    // Used only for User (students)
+    userStatus: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+    },
+    // Used only for User (students)
+    applicationStatus: {
+      type: String,
+      enum: ["none", "pending", "approved"],
+    },
     adminId: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: "User",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "UserModel",
       required: false,
-      default: undefined, // important to prevent automatic []
     },
   },
   { timestamps: true }
 );
 
-// Use the singular “User” so your `ref: "User"` works:
 const UserModel = mongoose.model("UserModel", UserSchema);
 export default UserModel;

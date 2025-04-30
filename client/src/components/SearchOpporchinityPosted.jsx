@@ -36,6 +36,7 @@ const SearchOpportunityPosted = () => {
   const [selectedPost, setSelectedPost] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { darkModehandle, darkMode } = useContext(ThemContext);
+  console.log("selectedPost", selectedPost);  
 
   useEffect(() => {
     fetchPosts();
@@ -234,12 +235,7 @@ const SearchOpportunityPosted = () => {
                         >
                           <HiOutlineEye className="mr-1" size={20} /> View
                         </Button>
-                        <Link to={`/ApplayInter/${post.userId}`}>
-                          <Button size="xs" gradientDuoTone="purpleToBlue">
-                            <HiOutlineUsers className="mr-1" size={20} />
-                            Applications
-                          </Button>
-                        </Link>
+                    
                       </div>
                     </TableCell>
                   </TableRow>

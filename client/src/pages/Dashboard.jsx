@@ -9,6 +9,7 @@ import ReportAnalytics from '../components/ReportAnalytics';
 import AdminDashboard from '../components/AdminDashboard';
 import ApprovedFacality from '../components/ApprovedFacality';
 import ApprovedAdvisor from '../components/ApprovedAdvisor';
+import ApprovedNormalUser from './ApprovedNormalUser';
 
 
 const Dashboard = () => {
@@ -34,6 +35,7 @@ const Dashboard = () => {
     <div className=''>{tab==="report" && <ReportAnalytics />}</div>
     <div className=''>{tab==="ApprovedFacality" && <ApprovedFacality />}</div>
     <div className=''>{tab === "ApprovedAdvisor" && <ApprovedAdvisor />}</div>
+    <div className=''>{tab === "ApprovedNormalUser" && <ApprovedNormalUser />}</div>
   
 </div>
  

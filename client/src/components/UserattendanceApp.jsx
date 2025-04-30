@@ -7,14 +7,14 @@ const UserattendanceApp = () => {
   const [pendingAttendances, setPendingAttendances] = useState([]);
   const [approvedAttendances, setApprovedAttendances] = useState([]);
 
-  const facultyId = localStorage.getItem("facultyId");
+ 
   const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchPending = async () => {
       try {
         const res = await fetch(
-          `/api/attendanceRoute/pending?facultyId=${facultyId}&applicantId=${currentUser._id}`
+          `/api/attendanceRoute/pending?applicantId=${currentUser._id}`
         );
         const data = await res.json();
         setPendingAttendances(Array.isArray(data) ? data : []);
@@ -24,16 +24,16 @@ const UserattendanceApp = () => {
       }
     };
 
-    if (facultyId && currentUser?._id) {
+    if ( currentUser?._id) {
       fetchPending();
     }
-  }, [facultyId, currentUser]);
+  }, [currentUser]);
 
   useEffect(() => {
     const fetchApproved = async () => {
       try {
         const res = await fetch(
-          `/api/attendanceRoute/approved?facultyId=${facultyId}&applicantId=${currentUser._id}`
+          `/api/attendanceRoute/approved?applicantId=${currentUser._id}`
         );
         const data = await res.json();
         setApprovedAttendances(Array.isArray(data) ? data : []);
@@ -43,27 +43,23 @@ const UserattendanceApp = () => {
       }
     };
 
-    if (facultyId && currentUser?._id) {
+    if (currentUser?._id) {
       fetchApproved();
     }
-  }, [facultyId, currentUser]);
+  }, [ currentUser]);
 
   return (
     <>
       {/* Pending Attendance */}
       <div className="max-w-6xl mx-auto py-10 px-6">
-        <h2 className="text-4xl font-bold  text-gray-800 dark:text-white mb-10 font-serif">
-          Pending Attendance
-        </h2>
-
         {pendingAttendances.length === 0 ? (
-          <p className=" text-gray-500 dark:text-gray-400">
-            No pending attendance records.
+          <p>
+       
           </p>
         ) : (
           <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2">
             {pendingAttendances.map((att) => (
-              <Card key={att._id} className="p-4">
+              <Card key={att._id} className="p-4 -ml-6 mx-1">
                 <div className="flex items-center justify-between mb-2">
                   <h5 className="text-lg font-semibold">{att.studentName}</h5>
                   <span className="text-yellow-600 font-medium">
@@ -82,21 +78,17 @@ const UserattendanceApp = () => {
       </div>
 
       {/* Approved Attendance */}
-      <div className="max-w-6xl mx-auto py-10">
-        <h2 className="text-4xl font-bold  text-gray-800 dark:text-white mb-10 font-serif">
-          Approved Attendance
-        </h2>
+      <div className="max-w-6xl mx-auto ">
 
         {approvedAttendances.length === 0 ? (
-          <p className="text-center text-gray-500 dark:text-gray-400">
-            No approved attendance records available.
+          <p>
           </p>
         ) : (
           <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {approvedAttendances.map((att) => (
               <Card
                 key={att._id}
-                className="hover:shadow-2xl shadow-xl border border-gray-100 dark:border-gray-700 transition-all duration-300 bg-white dark:bg-gray-800 rounded-3xl p-4"
+                className="ml-7 hover:shadow-2xl shadow-xl border border-gray-100 dark:border-gray-700 transition-all duration-300 bg-white dark:bg-gray-800 rounded-3xl p-4"
               >
                 <div className="flex items-center justify-between mb-4">
                   <h5 className="text-xl font-semibold text-gray-900 dark:text-white">
