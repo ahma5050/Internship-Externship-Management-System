@@ -7,10 +7,22 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependency directories
 node_modules
+client/node_modules
+server/node_modules
+
+# Build outputs
 dist
 dist-ssr
-*.local
+build
+client/dist
+client/build
+server/dist
+
+# Vite/Parcel cache
+.cache
+.vite
 
 # Editor directories and files
 .vscode/*
@@ -22,3 +34,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+Thumbs.db
+ehthumbs.db
