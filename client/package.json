@@ -31,7 +31,9 @@
     "framer-motion": "^12.6.3",
     "icons": "^1.0.0",
     "lucide-react": "^0.487.0",
+    "path": "^0.12.7",
     "react": "^19.0.0",
+    "react-calendar": "^5.1.0",
     "react-chartjs-2": "^5.3.0",
     "react-circular-progressbar": "^2.2.0",
     "react-datepicker": "^8.2.1",
@@ -39,11 +41,13 @@
     "react-icons": "^5.5.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.4.0",
+    "react-toastify": "^11.0.5",
     "recharts": "^2.15.3",
     "redux-persist": "^6.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
+    "@rollup/plugin-alias": "^5.1.1",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react-swc": "^3.8.0",

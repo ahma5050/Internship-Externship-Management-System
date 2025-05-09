@@ -13,6 +13,7 @@ import { CgProfile } from "react-icons/cg";
 import { LiaSignOutAltSolid } from "react-icons/lia";
 import { FaUser } from "react-icons/fa";
 import { motion } from 'framer-motion';
+import { MdChromeReaderMode } from "react-icons/md";
 
 
 const Header = () => {
@@ -26,13 +27,11 @@ const Header = () => {
 
   return (
     <Navbar className='border-b-2 z-40 relative overflow-visible'>
-<Link to="/" className="flex items-center gap-2 text-xl font-serif font-semibold">
-      <FaUniversity className="text-4xl text-gray-400 drop-shadow-md" />
-      <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-purple-400 to-pink-500 text-4xl font-extrabold tracking-wide font-sans">
-        IEM
-      </span>
-  
-    </Link>
+ <Link to="/" className="flex items-center">
+            <span className="text-2xl font-bold text-primary">
+              Intern<span className="text-secondary">Xcel</span>
+            </span>
+          </Link>
       <form>
         <TextInput type='text' placeholder='Search...' rightIcon={AiOutlineSearch} className='hidden lg:block' />
         <Button color='gray' pill className='lg:hidden'>
@@ -48,7 +47,7 @@ const Header = () => {
    
       </Navbar.Collapse>
       <div className='hidden md:block' onClick={darkModehandle}>
-        {darkMode ? <MdLightMode size={27} /> : <MdDarkMode size={27} />}
+        {darkMode ? <MdChromeReaderMode size={27} className='text-blue-400 '/> : <MdChromeReaderMode size={27} className='text-gray-800'/>}
       </div>
       {currentUser ? (
   <Dropdown
@@ -73,14 +72,14 @@ const Header = () => {
   >
 
 <Dropdown.Header
-  className="w-64 m-3 flex flex-col items-center gap-2 p-4 border-t-4 border-b rounded-lg  border-pink-200 rounded-t-xl shadow-md bg-gradient-to-r from-pink-50 to-purple-100 dark:from-gray-800 dark:to-gray-900"
+  className="w-56 m-3 flex flex-col items-center gap-2 p-4 "
 >
   {currentUser?.profile === defaultProfileImage ? (
     <motion.div
       initial={{ scale: 0.8, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ type: 'spring', stiffness: 200, damping: 10 }}
-      className="flex items-center justify-center h-16 w-16 bg-white text-pink-700 text-2xl font-bold rounded-full border-4 border-pink-600 shadow-lg"
+      className="flex items-center justify-center pb-2 h-16 w-16 bg-white text-pink-700 text-4xl rounded-full border-4 border-pink-600 shadow-lg font-serif"
     >
       {currentUser?.userName?.[0]}
     </motion.div>

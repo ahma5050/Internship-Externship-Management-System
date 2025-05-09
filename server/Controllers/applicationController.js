@@ -392,3 +392,17 @@ export const getApprovedtouserUserApplications = async (req, res) => {
   }
 };
 
+export const getApprovedApplicationsForAdmin = async (req, res) => {
+  try {
+    const applications = await Application.find({ status: "approved", assign: false }) // Fetch only approved applications
+      .populate("postId")         // Includes post details
+      .populate("applicantId")    // Includes applicant user details
+      .sort({ createdAt: -1 });
+
+    res.status(200).json(applications);
+  } catch (error) {
+    console.error("Error fetching approved applications for admin:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+

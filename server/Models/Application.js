@@ -12,6 +12,7 @@ const applicationSchema = new mongoose.Schema({
   degree:         { type: String, required: true },
   major:          { type: String, required: true },
   graduationYear: { type: Number, required: true },
+  assign: { type: Boolean, default: false },
 
   // Document filenames or file paths
   resume:      { type: String, required: true },

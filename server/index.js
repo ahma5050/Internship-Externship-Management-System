@@ -4,6 +4,8 @@ import  AuthRoute from './Routes/AuthRoute.js'
 import  attendanceRoute from './Routes/attendanceRoute.js'
 import postRoute from './Routes/post.route.js'
 import applicationRoute from './Routes/application.Route.js'
+import advisorAssignmentRoute from './Routes/advisorAssignmentRoute.js'
+import evaluationRoute from './Routes/evaluationRoute.js'
 import dotenv from "dotenv"
 import cookieParser from 'cookie-parser';
 import path from "path";
@@ -19,6 +21,8 @@ app.use("/api/postRoute", postRoute)
 app.use("/api/attendanceRoute", attendanceRoute)
 app.use('/api/AuthRoute', AuthRoute);
 app.use('/api/applicationRoute', applicationRoute);
+app.use('/api/advisorAssignmentRoute', advisorAssignmentRoute);
+app.use('/api/evaluationRoute', evaluationRoute);
 app.use("/uploads", express.static(path.join(path.resolve(), "uploads")));
 
 

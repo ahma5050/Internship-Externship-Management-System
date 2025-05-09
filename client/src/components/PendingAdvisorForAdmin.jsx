@@ -1,27 +1,47 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { Card, Button, Spinner, Alert, Table, Footer, Tooltip } from 'flowbite-react';
-import { HiCheckCircle, HiXCircle } from "react-icons/hi";
+import React, { useEffect, useState, useContext } from "react";
+import {
+  Card,
+  Button,
+  Spinner,
+  Alert,
+  Badge,
+  Avatar,
+  Modal,
+} from "flowbite-react";
+import {
+  HiCheckCircle,
+  HiXCircle,
+  HiOutlineMail,
+  HiOutlineShieldCheck,
+  HiOutlineClock,
+  HiOutlineUserAdd,
+} from "react-icons/hi";
 import { ThemContext } from "../context/ThemContext";
+import { FaQuoteRight } from "react-icons/fa";
 
 const PendingAdvisorForAdmin = () => {
   const [pendingAdvisors, setPendingAdvisors] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [actionLoading, setActionLoading] = useState(null);
+  const [selectedAdvisor, setSelectedAdvisor] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const { darkMode } = useContext(ThemContext);
-  const AdminId = localStorage.getItem('AdminId');
-  const advisorId = localStorage.getItem('advisorId');
+  const AdminId = localStorage.getItem("AdminId");
+  const advisorId = localStorage.getItem("advisorId");
+
+  const defaultProfileImage =
+    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 
   const fetchPendingAdvisors = async () => {
-    setError('');
+    setError("");
     setLoading(true);
     try {
-      const res = await fetch('/api/AuthRoute/pendingAdvisor');
-     
+      const res = await fetch("/api/AuthRoute/pendingAdvisor");
       const data = await res.json();
       setPendingAdvisors(data);
     } catch (err) {
-      setError('Failed to fetch pending advisors');
+      setError("Failed to fetch pending advisors");
     } finally {
       setLoading(false);
     }
@@ -30,17 +50,17 @@ const PendingAdvisorForAdmin = () => {
   const handleApprove = async (advisorId) => {
     setActionLoading(advisorId);
     try {
-      const res = await fetch('/api/AuthRoute/approveAdvisor', {
-        method: 'PUT',
+      const res = await fetch("/api/AuthRoute/approveAdvisor", {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ advisorId, AdminId }),
       });
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.message || 'Approval failed');
+        throw new Error(errorData.message || "Approval failed");
       }
 
       fetchPendingAdvisors();
@@ -48,157 +68,299 @@ const PendingAdvisorForAdmin = () => {
       setError(err.message);
     } finally {
       setActionLoading(null);
+      setShowModal(false);
     }
   };
 
   useEffect(() => {
     fetchPendingAdvisors();
   }, []);
-  const defaultProfileImage = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+
+  const openAdvisorModal = (advisor) => {
+    setSelectedAdvisor(advisor);
+    setShowModal(true);
+  };
 
   return (
-    <div className={`mt-12`}>
-      <Card className={`rounded-xl shadow-2xl mt-8 ${darkMode ? 'bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700' : 'bg-gradient-to-br from-white to-gray-50 border-gray-200 '}`}>
-        <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-          <div>
-            <h2 className={`text-2xl md:text-3xl font-bold font-serif ${darkMode ? 'text-white' : 'text-gray-800'}`}>
-              Pending Advisor Approvals
-            </h2>
-            <p className={`${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-              Review and approve newly registered advisors
-            </p>
-          </div>
-        </div>
-
-        {error && (
-          <Alert color="failure" className="mb-6" icon={HiXCircle}>
-            <span className="font-medium">Error!</span> {error}
-          </Alert>
-        )}
-
-        <div className={`overflow-x-auto rounded-lg border ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
-          <Table hoverable className={darkMode ? 'bg-gray-800' : 'bg-white'}>
-            <Table.Head className={darkMode ? 'bg-gray-700 text-teal-400' : 'bg-gray-100 text-teal-600'}>
-              <Table.HeadCell className="py-4">Advisor</Table.HeadCell>
-              <Table.HeadCell>Email</Table.HeadCell>
-              <Table.HeadCell>Role</Table.HeadCell>
-              <Table.HeadCell className="text-right flex justify-end mr-5">Actions</Table.HeadCell>
-            </Table.Head>
-            <Table.Body className={`divide-y ${darkMode ? 'divide-gray-700' : 'divide-gray-200'}`}>
-              {loading ? (
-                <Table.Row className={darkMode ? 'bg-gray-800' : 'bg-white'}>
-                  <Table.Cell colSpan={3} className="py-12 text-center">
-                    <Spinner size="xl" color={darkMode ? "info" : "success"} />
-                    <p className={`mt-4 ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                      Loading pending advisors...
-                    </p>
-                  </Table.Cell>
-                </Table.Row>
-              ) : pendingAdvisors.length > 0 ? (
-                pendingAdvisors.map((advisor) => (
-                  <Table.Row
-                    key={advisor._id}
-                    className={darkMode ? 'bg-gray-800 hover:bg-gray-700' : 'bg-white hover:bg-gray-50 '}
-                  >
-                    <Table.Cell className={`font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                      <div className="flex items-center space-x-3">
-                      <div className="w-[40px] h-[40px] overflow-hidden bg-gray-300 relative  rounded-full ">
-                {advisor.profile === defaultProfileImage || !advisor.profile ? (
-                  <div className="flex items-center justify-center w-full h-full bg-gray-300 text-white text-xl font-bold ">
-                    <span className="text-pink-700 mb-1">{advisor.userName?.[0]?.toUpperCase()}</span>
-                  </div>
-                ) : (
-                  <img
-                    src={`http://localhost:3000${advisor.profile}`}
-                    alt={advisor.userName}
-                    className="w-full h-full object-cover rounded-lg"
-                    onError={(e) => {
-                      e.currentTarget.onerror = null;
-                      e.currentTarget.src = defaultProfileImage;
-                    }}
-                  />
-                )}
-              </div>
-                    <span>{advisor.userName || 'Unknown'}</span>
-
-                      </div>
-                    </Table.Cell>
-                    <Table.Cell className={darkMode ? 'text-gray-300' : 'text-gray-600'}>
-                      {advisor.email}
-                    </Table.Cell>
-                    <Table.Cell className={darkMode ? 'text-gray-300' : 'text-gray-600'}>
-                      {advisor.roles}
-                    </Table.Cell>
-                    <Table.Cell className="text-right">
-  <div className="flex justify-end">
-    <Button
-      size="xs"
-      gradientDuoTone={darkMode ? "purpleToBlue" : "tealToLime"}
-      onClick={() => handleApprove(advisor._id)}
-      disabled={actionLoading === advisor._id}
+    <div
+      className={` mt-10 max-w-7xl mx-auto ${
+        darkMode ? "bg-gray-900" : "bg-gray-50"
+      }`}
     >
-      {actionLoading === advisor._id ? (
-        <Spinner size="sm" />
-      ) : (
-        <>
-          <HiCheckCircle className="mr-2 h-4 w-4" />
-          Approve
-        </>
+        <Card className={`mb-8 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
+    <div className="flex flex-col md:flex-row items-center justify-between">
+             <div className="flex items-center mb-4 md:mb-0">
+               <div className={`p-3 rounded-full ${darkMode ? 'bg-teal-900 text-teal-300' : 'bg-teal-100 text-teal-800'} mr-4`}>
+                 <HiOutlineUserAdd className="h-6 w-6" />
+               </div>
+               <div>
+                 <h2 className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-800'}`}>
+                 Advisor Approvals
+                 </h2>
+                 <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                 Manage pending user registrations
+                 </p>
+               </div>
+             </div>
+             <div className="flex items-center">
+               <FaQuoteRight size={30} className={darkMode ? "text-teal-400" : "text-teal-600"} />
+               <Badge color={darkMode ? "indigo" : "blue"} className="ml-3">
+                 {pendingAdvisors.length} Pending
+               </Badge>
+             </div>
+           </div>
+           </Card>
+
+      {error && (
+        <Alert color="failure" className="mb-6" icon={HiXCircle}>
+          <span className="font-medium">Error!</span> {error}
+        </Alert>
       )}
-    </Button>
-  </div>
-</Table.Cell>
 
-                  </Table.Row>
-                ))
-              ) : (
-                <Table.Row
-  className={`transition-colors duration-200 w-full ${
-    darkMode ? 'bg-gray-800 hover:bg-gray-700' : 'bg-white hover:bg-gray-100'
-  }`}
->
-  <Table.Cell colSpan={4} className="py-12 text-center">
-    <div className="w-full">
-      <div className="flex flex-col items-center justify-center">
-        <HiCheckCircle
-          className={`h-12 w-12 mb-4 ${
-            darkMode ? 'text-gray-600' : 'text-gray-400'
-          }`}
-        />
-        <p
-          className={`text-lg ${
-            darkMode ? 'text-gray-300' : 'text-gray-600'
-          }`}
-        >
-          All clear!
-        </p>
-        <p
-          className={`text-sm ${
-            darkMode ? 'text-gray-500' : 'text-gray-400'
-          }`}
-        >
-          No pending advisor approvals at this time.
-        </p>
-      </div>
-    </div>
-  </Table.Cell>
-</Table.Row>
-
-              )}
-            </Table.Body>
-          </Table>
+      {loading ? (
+        <div className="flex flex-col items-center justify-center h-64">
+          <Spinner size="xl" color={darkMode ? "purple" : "success"} />
+          <p className={`mt-4 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+            Loading pending advisors...
+          </p>
         </div>
-
-        <div className={`flex justify-between items-center mt-6 pt-4 border-t 
-          ${darkMode ? 'border-gray-700 text-gray-400' : 'border-gray-200 text-gray-500'}`}>
-          <div className="mb-2 md:mb-0">
-            <span className="font-medium">{pendingAdvisors.length}</span> pending approval{pendingAdvisors.length !== 1 ? 's' : ''}
-          </div>
-          <div className="text-center font-serif text-white">
-            <Footer.Copyright href="#" by="Kelem Meda" year={new Date().getFullYear()} className="text-white text-md" />
-          </div>
+      ) : (
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {pendingAdvisors.length === 0 ? (
+            <Card
+              className={`col-span-full text-center py-12 ${
+                darkMode ? "bg-gray-800" : "bg-white"
+              }`}
+            >
+              <div
+                className={`mx-auto flex h-12 w-12 items-center justify-center rounded-full ${
+                  darkMode ? "bg-gray-700" : "bg-green-100"
+                }`}
+              >
+                <HiCheckCircle
+                  className={`h-6 w-6 ${
+                    darkMode ? "text-green-400" : "text-green-600"
+                  }`}
+                />
+              </div>
+              <h3
+                className={`mt-4 text-lg font-medium ${
+                  darkMode ? "text-white" : "text-gray-900"
+                }`}
+              >
+                All caught up!
+              </h3>
+              <p
+                className={`mt-2 text-sm ${
+                  darkMode ? "text-gray-400" : "text-gray-500"
+                }`}
+              >
+                No pending advisor approvals at this time.
+              </p>
+            </Card>
+          ) : (
+            pendingAdvisors.map((advisor) => (
+              <Card
+                key={advisor._id}
+                className={`hover:shadow-lg transition-shadow duration-200 ${
+                  darkMode
+                    ? "bg-gray-800 border-gray-700"
+                    : "bg-white border-gray-200"
+                }`}
+              >
+                <div className="flex items-center space-x-4">
+                  <div className="relative">
+                    <Avatar
+                      img={
+                        advisor.profile &&
+                        advisor.profile !== defaultProfileImage
+                          ? `http://localhost:3000${advisor.profile}`
+                          : undefined
+                      }
+                      alt={advisor.userName}
+                      rounded
+                      size="lg"
+                      placeholderInitials={advisor.userName?.[0]?.toUpperCase()}
+                      className={`${
+                        darkMode ? "ring-gray-700" : "ring-gray-200"
+                      } ring-2`}
+                    />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h2
+                      className={`text-lg font-bold truncate ${
+                        darkMode ? "text-white" : "text-gray-900"
+                      }`}
+                    >
+                      {advisor.userName || "Unknown"}
+                    </h2>
+                    <div className="flex items-center text-sm mt-1">
+                      <HiOutlineMail
+                        className={`mr-1.5 h-4 w-4 ${
+                          darkMode ? "text-gray-400" : "text-gray-500"
+                        }`}
+                      />
+                      <span
+                        className={`truncate ${
+                          darkMode ? "text-gray-300" : "text-gray-600"
+                        }`}
+                      >
+                        {advisor.email}
+                      </span>
+                    </div>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      <Badge
+                        color={darkMode ? "indigo" : "blue"}
+                        icon={HiOutlineShieldCheck}
+                        className={`${darkMode ? "bg-gray-700" : "bg-blue-50"}`}
+                      >
+                        {advisor.roles}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 flex space-x-3">
+                  <Button
+                    gradientDuoTone={darkMode ? "purpleToBlue" : "tealToLime"}
+                    onClick={() => openAdvisorModal(advisor)}
+                    disabled={actionLoading === advisor._id}
+                    className="flex-1"
+                  >
+                    {actionLoading === advisor._id ? (
+                      <Spinner size="sm" className="mr-2" />
+                    ) : (
+                      <HiCheckCircle className="mr-2 h-5 w-5" />
+                    )}
+                    Approve
+                  </Button>
+                  <Button
+                    color={darkMode ? "gray" : "light"}
+                    onClick={() => openAdvisorModal(advisor)}
+                    className="flex-1"
+                  >
+                    View Details
+                  </Button>
+                </div>
+              </Card>
+            ))
+          )}
         </div>
-      </Card>
+      )}
+
+      {/* Advisor Approval Modal */}
+      <Modal show={showModal} onClose={() => setShowModal(false)} size="md">
+        <Modal.Header
+          className={
+            darkMode
+              ? "bg-gray-800 border-gray-700"
+              : "bg-white border-gray-200"
+          }
+        >
+          <h3
+            className={`text-lg font-medium ${
+              darkMode ? "text-white" : "text-gray-900"
+            }`}
+          >
+            Advisor Details
+          </h3>
+        </Modal.Header>
+        <Modal.Body className={darkMode ? "bg-gray-800" : "bg-white"}>
+          {selectedAdvisor && (
+            <div className="space-y-6">
+              <div className="flex flex-col items-center">
+                <Avatar
+                  img={
+                    selectedAdvisor.profile &&
+                    selectedAdvisor.profile !== defaultProfileImage
+                      ? `http://localhost:3000${selectedAdvisor.profile}`
+                      : undefined
+                  }
+                  alt={selectedAdvisor.userName}
+                  rounded
+                  size="xl"
+                  placeholderInitials={selectedAdvisor.userName?.[0]?.toUpperCase()}
+                  className={`mb-4 ${
+                    darkMode ? "ring-gray-700" : "ring-gray-200"
+                  } ring-2`}
+                />
+                <h3
+                  className={`text-xl font-bold ${
+                    darkMode ? "text-white" : "text-gray-900"
+                  }`}
+                >
+                  {selectedAdvisor.userName || "Unknown"}
+                </h3>
+                <p
+                  className={`${darkMode ? "text-gray-400" : "text-gray-500"}`}
+                >
+                  {selectedAdvisor.email}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p
+                    className={`text-sm font-medium ${
+                      darkMode ? "text-gray-400" : "text-gray-500"
+                    }`}
+                  >
+                    Role
+                  </p>
+                  <p
+                    className={`text-sm ${
+                      darkMode ? "text-white" : "text-gray-900"
+                    }`}
+                  >
+                    {selectedAdvisor.roles}
+                  </p>
+                </div>
+                <div>
+                  <p
+                    className={`text-sm font-medium ${
+                      darkMode ? "text-gray-400" : "text-gray-500"
+                    }`}
+                  >
+                    Status
+                  </p>
+                  <Badge
+                    color="yellow"
+                    icon={HiOutlineClock}
+                    className="inline-flex"
+                  >
+                    Pending
+                  </Badge>
+                </div>
+              </div>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer
+          className={
+            darkMode
+              ? "bg-gray-800 border-gray-700"
+              : "bg-white border-gray-200"
+          }
+        >
+          <Button
+            gradientDuoTone={darkMode ? "purpleToBlue" : "tealToLime"}
+            onClick={() => handleApprove(selectedAdvisor?._id)}
+            disabled={actionLoading === selectedAdvisor?._id}
+          >
+            {actionLoading === selectedAdvisor?._id ? (
+              <Spinner size="sm" className="mr-2" />
+            ) : (
+              <HiCheckCircle className="mr-2 h-5 w-5" />
+            )}
+            Confirm Approval
+          </Button>
+          <Button
+            color={darkMode ? "gray" : "light"}
+            onClick={() => setShowModal(false)}
+          >
+            Cancel
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

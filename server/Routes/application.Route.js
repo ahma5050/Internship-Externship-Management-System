@@ -11,6 +11,7 @@ import {
   getApplicationsByStatus,
   gettouserPendingApplications,
   getApprovedtouserUserApplications,
+  getApprovedApplicationsForAdmin,
   
 } from "../Controllers/applicationController.js";
 
@@ -45,5 +46,6 @@ router.get("/rejected", getrejectedApplications);
 router.get("/", getApplicationsByStatus);
 router.get("/ApplicantPendingfrouser", gettouserPendingApplications);
 router.get("/ApplicantApprovedforuser", getApprovedtouserUserApplications);
+router.get("/getApprovedApplicationsForAdmin", getApprovedApplicationsForAdmin);
 
 export default router;

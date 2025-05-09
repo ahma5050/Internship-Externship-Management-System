@@ -33,7 +33,7 @@ const UserNormalpending = () => {
  
 
   return (
-    <div className="flex flex-col h-auto text-center  pt-4">
+    <div className="flex flex-col h-auto text-center py-5">
       {currentUser?.userStatus === "pending" ? (
         <div className='mx-auto'>
           <h1 className={`text-left text-3xl font-bold mb-6 ${darkMode ? "text-white" : "text-gray-800"}`}>

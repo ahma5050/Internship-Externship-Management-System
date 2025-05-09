@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { MdPostAdd } from "react-icons/md";
+import { MdPostAdd, MdApproval, MdCancel, MdCheckCircle, MdOutlinePending } from "react-icons/md";
 import { Link } from 'react-router-dom';
 import { ThemContext } from '../context/ThemContext';
 import ApprovalFacality from './ApprovalFacality';
@@ -10,11 +10,11 @@ const FacultyDashboard = () => {
     approved: 0,
     rejected: 0,
     approvedAttendance: 0,
-    rejectedAttendance: 0
+    rejectedAttendance: 0,
+    loading: true
   });
   
-
-  const { darkModehandle, darkMode } = useContext(ThemContext);
+  const { darkMode } = useContext(ThemContext);
   const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
@@ -35,58 +35,117 @@ const FacultyDashboard = () => {
           rejected: appData.rejected || 0,
           approvedAttendance: attData.approvedAttendance || 0,
           rejectedAttendance: attData.rejectedAttendance || 0,
+          loading: false
         });
       } catch (error) {
         console.error("Error fetching dashboard stats:", error);
+        setStats(prev => ({ ...prev, loading: false }));
       }
     };
 
     fetchStats();
   }, []);
 
+  if (currentUser.roles === "Faculty" && currentUser.status === "pending") {
+    return <ApprovalFacality />;
+  }
+
   return (
-    <div className="max-w-6xl mx-auto py-12 px-8 bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-800 dark:via-gray-900 dark:to-gray-950 rounded-3xl shadow-xl border border-opacity-10 border-white dark:border-gray-700 overflow-hidden relative transition-colors duration-300">
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500"></div>
+    <div className={`min-h-screen py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-300 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">
+            Faculty Dashboard
+          </h1>
+          <p className="text-lg text-gray-600 dark:text-gray-300">
+            Manage your applications and attendance records
+          </p>
+        </div>
 
-      <h2 className="text-center text-5xl font-bold text-gray-800 dark:text-gray-100 mb-12 font-serif tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-gray-700 via-gray-900 to-black dark:from-gray-300 dark:via-gray-100 dark:to-white">
-        Faculty Dashboard
-      </h2>
-      {currentUser.roles==="Faculty" && currentUser.status==="pending" ?
-     (<ApprovalFacality />) :(
+        {/* Stats Cards */}
+        {stats.loading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Posts Card */}
+            <DashboardCard 
+              to="/DashPosts" 
+              icon={<MdPostAdd className="w-12 h-12" />} 
+              label="Posts" 
+              count="Create New"
+              gradient="from-blue-500 to-indigo-600"
+              iconColor="text-white"
+            />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-10 font-serif">
-        {/* Posts */}
-        <DashboardCard to="/DashPosts" icon={<MdPostAdd size={50} />} label="Posts" gradient="from-cyan-400 to-purple-600" />
+            {/* Approved Applications */}
+            <DashboardCard 
+              to="/ApprovedUser" 
+              icon={<MdApproval className="w-12 h-12" />} 
+              label="Approved Applications" 
+              count={stats.approved}
+              gradient="from-green-500 to-emerald-600"
+              iconColor="text-white"
+            />
 
-        {/* Approved Applications */}
-        <DashboardCard to="/ApprovedUser" value={stats.approved} label="Approved Appilcation" gradient="from-green-400 to-emerald-600" />
+            {/* Rejected Applications */}
+            <DashboardCard 
+              to="/RejectedUser" 
+              icon={<MdCancel className="w-12 h-12" />} 
+              label="Rejected Applications" 
+              count={stats.rejected}
+              gradient="from-red-500 to-pink-600"
+              iconColor="text-white"
+            />
 
-        {/* Rejected Applications */}
-        <DashboardCard to="/RejectedUser" value={stats.rejected} label="Rejected Appilcation" gradient="from-red-400 to-pink-600" />
+            {/* Approved Attendance */}
+            <DashboardCard 
+              to="/ApprovedAttendance" 
+              icon={<MdCheckCircle className="w-12 h-12" />} 
+              label="Approved Attendance" 
+              count={stats.approvedAttendance}
+              gradient="from-teal-500 to-cyan-600"
+              iconColor="text-white"
+            />
 
-        {/* Approved Attendance */}
-        <DashboardCard to="/ApprovedAttendance" value={stats.approvedAttendance} label="Attendance Approved" gradient="from-blue-400 to-indigo-600" />
-
-        {/* Rejected Attendance */}
-        <DashboardCard to="/RejectedAttendance" value={stats.rejectedAttendance} label="Attendance Rejected" gradient="from-yellow-400 to-orange-500" />
+            {/* Rejected Attendance */}
+            <DashboardCard 
+              to="/RejectedAttendance" 
+              icon={<MdOutlinePending className="w-12 h-12" />} 
+              label="Rejected Attendance" 
+              count={stats.rejectedAttendance}
+              gradient="from-amber-500 to-orange-600"
+              iconColor="text-white"
+            />
+          </div>
+        )}
       </div>
-     )}
     </div>
   );
 };
 
-const DashboardCard = ({ to, value, label, icon, gradient }) => (
+const DashboardCard = ({ to, count, label, icon, gradient, iconColor }) => (
   <Link
     to={to}
-    className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 p-8 flex flex-col items-center justify-center border border-gray-100 dark:border-gray-700 overflow-hidden group hover:-translate-y-2"
+    className={`relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 group`}
   >
-    <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-    <div className={`relative z-10 bg-gradient-to-br ${gradient} p-5 rounded-full text-white text-4xl font-bold mb-6 shadow-lg group-hover:scale-110 transition-transform duration-500`}>
-      {value !== undefined ? value : icon}
+    <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-90 group-hover:opacity-100 transition-opacity duration-300`}></div>
+    
+    <div className="relative z-10 p-6 text-white">
+      <div className={`mb-4 inline-flex items-center justify-center p-3 rounded-full bg-white bg-opacity-20 ${iconColor}`}>
+        {icon}
+      </div>
+      <h3 className="text-xl font-semibold mb-1">{label}</h3>
+      <p className="text-3xl font-bold">
+        {typeof count === 'number' ? count : (
+          <span className="text-sm font-normal uppercase tracking-wider">{count}</span>
+        )}
+      </p>
     </div>
-    <p className="relative z-10 text-3xl font-semibold text-gray-800 dark:text-gray-200 group-hover:text-gray-900 dark:group-hover:text-white transition-colors duration-300">
-      {label}
-    </p>
+    
+    <div className="absolute bottom-0 left-0 right-0 h-1 bg-white bg-opacity-30 group-hover:bg-opacity-50 transition-all duration-300"></div>
   </Link>
 );
 
