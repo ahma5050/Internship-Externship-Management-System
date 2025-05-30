@@ -7,12 +7,14 @@ import AdvisorDashboard from "../components/AdvisorDashboard";
 import ProgressMonitoring from "../components/ProgressMonitoring";
 import CommunicationScheduling from "../components/CommunicationScheduling";
 import AdvisorReportingAnalytics from "../components/AdvisorReportingAnalytics";
+import { MessagesTab } from "../components/MessagesTab";
+
 
 
 const DashboardAdvisor = () => {
   const Location = useLocation();
   const [tab, setTab] = useState("");
-  
+
   useEffect(() => {
     const UrlParams = new URLSearchParams(Location.search);
     const paramsvalue = UrlParams.get("tab");
@@ -25,11 +27,12 @@ const DashboardAdvisor = () => {
       <div className="w-full md:w-72">
         <DashSidebasr />
       </div>
-      
+
       {/* Main Content */}
       <div className="flex-1 p-4 mx-5">
         {tab === "AdvisorDashboard" && <AdvisorDashboard />}
         {tab === "profile" && <DashProfile />}
+        {tab === "MessagesTab" && <MessagesTab/>}
         {tab === "Monitoring" && <ProgressMonitoring />}
         {tab === "Communication" && <CommunicationScheduling />}
         {tab === "Reporting" && <AdvisorReportingAnalytics />}

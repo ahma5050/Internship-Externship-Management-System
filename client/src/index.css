@@ -12,51 +12,24 @@ font-bold
 font-semibold
 }
 
-/* @keyframes float {
-      0%, 100% {
-          transform: translateY(0);
-      }
-      50% {
-          transform: translateY(-20px);
-      }
-  }
-  
-  @keyframes pulse {
-      0%, 100% {
-          transform: scale(1);
-          opacity: 1;
-      }
-      50% {
-          transform: scale(1.05);
-          opacity: 0.8;
-      }
-  }
-  
-  @keyframes draw {
-      from {
-          stroke-dashoffset: 1000;
-      }
-      to {
-          stroke-dashoffset: 0;
-      }
-  }
-  
-  .animate-float {
-      animation: float 6s ease-in-out infinite;
-  }
-  
-  .animate-pulse {
-      animation: pulse 3s ease infinite;
-  }
-  
-  .animate-draw {
-      stroke-dasharray: 1000;
-      stroke-dashoffset: 1000;
-      animation: draw 2s ease-in-out forwards;
-  } */
+
 
   html, body, #root {
     height: 100%;
     overflow-x: hidden;
+  }
+  
+  .galada-regular {
+    font-family: "Galada", cursive;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+
+  .orbitron-teka {
+    font-family: "Orbitron", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
   }
   

@@ -15,8 +15,8 @@ export const assignAdvisor = async (req, res) => {
   try {
     const advisor = await UserModel.findById(advisorId);
     if (!advisor) return res.status(404).json({ message: 'Advisor not found' });
-
-    const application = await Application.findOne({ applicantId: userId, status: 'approved', assign: false }); 
+assign: false
+    const application = await Application.findOne({ applicantId: userId, status: 'approved',  }); 
     if (!application) return res.status(404).json({ message: 'Approved application not found for this student' });
 
     const assignment = new AdvisorAssignment({

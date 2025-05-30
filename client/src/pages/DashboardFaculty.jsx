@@ -10,6 +10,7 @@ import GeneretReport from '../components/GeneretReport';
 import InternshepPost from '../components/InternshepPost';
 import ApprovalProcess from '../components/ApprovalProcess';
 import AttendanceApproval from '../components/AttendanceApproval';
+import GreadListingPage from './GreadListingPage';
 
 
 
@@ -37,6 +38,7 @@ const DashboardFaculty = () => {
     <div className=''>{tab==="GreadingActivity" && <GreadingActivity />}</div>
     <div className=''>{tab==="GeneretReport" && <GeneretReport />}</div>
     <div className=''>{tab==="Attenadpproval" && <AttendanceApproval />}</div>
+    <div className=''>{tab==="GreadListingPage" && <GreadListingPage />}</div>
 </div>
 
  

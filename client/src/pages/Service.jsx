@@ -1,151 +1,256 @@
-import React, { useContext, useState } from 'react';
-import { FiBriefcase, FiUser, FiUsers, FiBarChart2, FiFileText, FiGlobe, FiSun, FiMoon } from 'react-icons/fi';
-import { ThemContext } from '../context/ThemContext';
+import React, { useState, useRef, useEffect } from 'react';
+import { Card, Badge, Button } from 'flowbite-react';
+import { Building, GraduationCap, Users, Rocket, Briefcase, BookOpen, BarChart2, FileText, MessageSquare, Calendar, Shield, ArrowRight } from 'lucide-react';
+import StatsCounter from '../components/StatsCounter';
+import CTA from '../components/CTA';
 
-const Service = () => {
-const { darkModehandle, darkMode } = useContext(ThemContext);
+export default function ServicesPage() {
+  const [activeCategory, setActiveCategory] = useState('all');
+  const sectionRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.1 }
+    );
+    
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    
+    return () => {
+      if (sectionRef.current) observer.unobserve(sectionRef.current);
+    };
+  }, []);
+
+  const stats = [
+    { number: 10000, label: "Students Placed", suffix: "+" },
+    { number: 95, label: "Satisfaction Rate", suffix: "%" },
+    { number: 200, label: "Partner Companies", suffix: "+" },
+    { number: 50, label: "University Partners", suffix: "+" }
+  ];
 
   const services = [
     {
-      icon: <FiBriefcase className="w-8 h-8" />,
-      title: "Internship Posting",
-      description: "Companies post opportunities for students—zero fees, maximum reach.",
-      gradient: "from-purple-500 to-indigo-500"
+      id: 1,
+      title: "AI Career Matching",
+      description: "Smart algorithm matches your skills with ideal internships",
+      icon: <Rocket className="w-8 h-8 text-blue-600" />,
+      category: "students",
+      badge: "Popular"
     },
     {
-      icon: <FiUser className="w-8 h-8" />,
-      title: "Student Applications",
-      description: "One-click applications with smart matching.",
-      gradient: "from-blue-500 to-teal-400"
+      id: 2,
+      title: "Talent Acquisition Suite",
+      description: "Complete toolkit for finding and managing interns",
+      icon: <Building className="w-8 h-8 text-purple-600" />,
+      category: "employers",
+      badge: "New"
     },
     {
-      icon: <FiUsers className="w-8 h-8" />,
-      title: "Adviser Matching",
-      description: "AI-powered mentor assignments.",
-      gradient: "from-amber-500 to-pink-500"
+      id: 3,
+      title: "Academic Integration",
+      description: "Seamlessly connect internships with curriculum",
+      icon: <GraduationCap className="w-8 h-8 text-green-600" />,
+      category: "universities"
     },
     {
-      icon: <FiBarChart2 className="w-8 h-8" />,
-      title: "Progress Analytics",
-      description: "Real-time dashboards for all stakeholders.",
-      gradient: "from-emerald-500 to-cyan-400"
+      id: 4,
+      title: "Resume Optimizer",
+      description: "ATS-friendly resume builder with real-time feedback",
+      icon: <FileText className="w-8 h-8 text-yellow-600" />,
+      category: "students"
     },
     {
-      icon: <FiFileText className="w-8 h-8" />,
-      title: "Document Hub",
-      description: "Centralized resumes, certificates, and reports.",
-      gradient: "from-red-500 to-orange-500"
+      id: 5,
+      title: "Performance Analytics",
+      description: "Track intern progress with detailed metrics",
+      icon: <BarChart2 className="w-8 h-8 text-red-600" />,
+      category: "employers"
     },
     {
-      icon: <FiGlobe className="w-8 h-8" />,
-      title: "Global Network",
-      description: "Connect with international opportunities.",
-      gradient: "from-violet-500 to-fuchsia-500"
+      id: 6,
+      title: "Placement Dashboard",
+      description: "University-wide tracking of student outcomes",
+      icon: <BookOpen className="w-8 h-8 text-indigo-600" />,
+      category: "universities"
+    },
+    {
+      id: 7,
+      title: "Interview Prep",
+      description: "Mock interviews with AI feedback",
+      icon: <MessageSquare className="w-8 h-8 text-pink-600" />,
+      category: "students"
+    },
+    {
+      id: 8,
+      title: "Compliance Tools",
+      description: "Ensure all internship programs meet regulations",
+      icon: <Shield className="w-8 h-8 text-teal-600" />,
+      category: "employers"
     }
   ];
 
+  const filteredServices = activeCategory === 'all' 
+    ? services 
+    : services.filter(service => service.category === activeCategory);
+
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900'}`}>
-
+    <div className="bg-white dark:bg-gray-900">
       {/* Hero Section */}
-      <section className={`py-20 ${darkMode ? 'bg-gray-800' : 'bg-gradient-to-r from-blue-50 to-purple-50'}`}>
-        <div className="container mx-auto px-6 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            Transform <span className="bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">Internships</span>
-          </h1>
-          <p className="text-xl md:text-2xl max-w-3xl mx-auto opacity-90">
-            End-to-end internship management with zero payment barriers
-          </p>
+      <section className="relative bg-blue-600 h-screen py-24 text-white overflow-hidden">
+        <div className="absolute inset-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-3xl mx-auto text-center">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+              Our <span className="text-yellow-300">Specialized Services</span>
+            </h1>
+            <p className="text-xl mb-8 opacity-90">
+              Discover solutions designed specifically for students, employers, and academic institutions.
+            </p>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Button gradientDuoTone="purpleToBlue" size="lg">
+                <Rocket className="mr-2" /> Explore Features
+              </Button>
+              <Button outline gradientDuoTone="purpleToBlue" size="lg">
+                <Briefcase className="mr-2" /> For Employers
+              </Button>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Services Grid */}
-      <section className="py-16 container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold mb-4">Our Free Services</h2>
-         
-        </div>
+      <section 
+        ref={sectionRef} 
+        className="py-16 md:py-24 bg-white dark:bg-gray-900"
+        id="services"
+      >
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 dark:text-white">
+              Comprehensive Service Offerings
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+              Select a category to explore our specialized solutions
+            </p>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service, index) => (
-            <div 
-              key={index}
-              className={`rounded-xl p-8 transition-all duration-500 transform hover:-translate-y-2 shadow-lg ${darkMode ? 'bg-gray-800' : 'bg-white'}`}
+          {/* Category Filter */}
+          <div className="flex flex-wrap justify-center gap-4 mb-12">
+            <Button 
+              color={activeCategory === 'all' ? 'purple' : 'gray'} 
+              onClick={() => setActiveCategory('all')}
+             
             >
-              <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-6 bg-gradient-to-r ${service.gradient} text-white`}>
-                {service.icon}
-              </div>
-              <h3 className="text-xl font-bold mb-3">{service.title}</h3>
-              <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>{service.description}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className={`py-16 ${darkMode ? 'bg-gray-800' : 'bg-gray-100'}`}>
-        <div className="container mx-auto px-6 font-serif">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div className="p-6">
+              All Services
+            </Button>
+            <Button 
+              color={activeCategory === 'students' ? 'purple' : 'gray'} 
+              onClick={() => setActiveCategory('students')}
+           
+            >
+              <Users className="mr-2 h-4 w-4" /> For Students
+            </Button>
+            <Button 
+              color={activeCategory === 'employers' ? 'purple' : 'gray'} 
+              onClick={() => setActiveCategory('employers')}
             
-              <h3 className="text-4xl font-bold text-purple-600 mb-2">500+</h3>
-              <p className="opacity-80">Companies</p>
-              <div className='flex flex-col gap-1'>
-              <hr className='h-2 bg-purple-600  rounded-full border-none w-[250px]'/>
-              <hr className='h-2 bg-purple-600  rounded-full border-none w-[200px]'/>
-               <hr className='h-2 bg-purple-600  rounded-full border-none w-[150px]'/>
-               </div>
-            </div>
-            <div className="p-6">
-              <h3 className="text-4xl font-bold text-blue-600 mb-2">10K+</h3>
-              <p className="opacity-80">Students</p>
-              <div className='flex flex-col gap-1'>
-              <hr className='h-2 bg-blue-600  rounded-full border-none w-[250px]'/>
-              <hr className='h-2 bg-blue-600  rounded-full border-none w-[200px]'/>
-              <hr className='h-2 bg-blue-600  rounded-full border-none w-[150px]'/>
-              </div>
-            </div>
-            <div className="p-6">
-              <h3 className="text-4xl font-bold text-amber-600 mb-2">95%</h3>
-              <p className="opacity-80">Satisfaction</p>
-              <div className='flex flex-col gap-1'>
-              <hr className='h-2 bg-amber-600 rounded-full border-none w-[250px]'/>
-              <hr className='h-2 bg-amber-600 rounded-full border-none w-[200px]'/>
-              <hr className='h-2 bg-amber-600 rounded-full border-none w-[150px]'/>
-              </div>
-            </div>
-            <div className="p-6">
-              <h3 className="text-4xl font-bold text-emerald-600 mb-2">24/7</h3>
-              <p className="opacity-80">Support</p>
-              <div className='flex flex-col gap-1'>
-              <hr className='h-2 bg-emerald-600 rounded-full border-none w-[250px]'/>
-              <hr className='h-2 bg-emerald-600 rounded-full border-none w-[200px]'/>
-              <hr className='h-2 bg-emerald-600 rounded-full border-none w-[150px]'/>
-              </div>
-            </div>
+            >
+              <Building className="mr-2 h-4 w-4" /> For Employers
+            </Button>
+            <Button 
+              color={activeCategory === 'universities' ? 'purple' : 'gray'} 
+              onClick={() => setActiveCategory('universities')}
+     
+            >
+              <GraduationCap className="mr-2 h-4 w-4" /> For Universities
+            </Button>
+          </div>
+
+          {/* Services Cards */}
+          <div className={`grid md:grid-cols-2 lg:grid-cols-3 gap-8 transition-all duration-500 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}>
+            {filteredServices.map((service) => (
+              <Card 
+                key={service.id} 
+                className="hover:shadow-xl transition-shadow h-full flex flex-col"
+                href="#"
+              >
+                <div className="flex justify-between items-start">
+                  <div className="p-3 rounded-lg bg-blue-50 dark:bg-gray-700">
+                    {service.icon}
+                  </div>
+                  {service.badge && (
+                    <Badge color="purple" className="ml-auto">
+                      {service.badge}
+                    </Badge>
+                  )}
+                </div>
+                <h3 className="text-xl font-bold dark:text-white">{service.title}</h3>
+                <p className="text-gray-600 dark:text-gray-400 flex-grow">
+                  {service.description}
+                </p>
+                <Button className="bg-blue-300 border">
+                  Learn more <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 container mx-auto px-6 text-center">
-        <div className={`max-w-4xl mx-auto p-8 rounded-2xl ${darkMode ? 'bg-gray-800' : 'bg-white'} shadow-xl`}>
-          <h2 className="text-3xl font-bold mb-6 font-serif">Ready to revolutionize internships?</h2>
-          <p className="text-xl mb-8 opacity-90 ">
-            Join thousands of companies and students in our free ecosystem
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <button className="px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-500 text-white rounded-full font-bold hover:opacity-90 transition">
-              Post an Internship
-            </button>
-            <button className={`px-8 py-3 rounded-full font-bold border-2 ${darkMode ? 'border-purple-400 text-purple-400' : 'border-purple-600 text-purple-600'} hover:bg-purple-50/10 transition`}>
-              Student Application
-            </button>
+      {/* Value Proposition */}
+      <section className="py-16 bg-gray-50 dark:bg-gray-800">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 dark:text-white">
+              Why Choose Our Services?
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400">
+              We combine cutting-edge technology with deep industry expertise to deliver exceptional results
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <Card className="text-center p-6">
+              <div className="mx-auto p-3 rounded-full bg-blue-100 dark:bg-blue-900 w-12 h-12 flex items-center justify-center mb-4">
+               
+              </div>
+              <h3 className="text-xl font-bold mb-2 dark:text-white">Proven Results</h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                95% satisfaction rate across all user groups with measurable outcomes
+              </p>
+            </Card>
+            
+            <Card className="text-center p-6">
+              <div className="mx-auto p-3 rounded-full bg-purple-100 dark:bg-purple-900 w-12 h-12 flex items-center justify-center mb-4">
+                <Briefcase className="text-purple-600 dark:text-purple-400" />
+              </div>
+              <h3 className="text-xl font-bold mb-2 dark:text-white">Industry Focused</h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                Solutions designed by experts who understand your specific challenges
+              </p>
+            </Card>
+            
+            <Card className="text-center p-6">
+              <div className="mx-auto p-3 rounded-full bg-green-100 dark:bg-green-900 w-12 h-12 flex items-center justify-center mb-4">
+                <Rocket className="text-green-600 dark:text-green-400" />
+              </div>
+              <h3 className="text-xl font-bold mb-2 dark:text-white">Continuous Innovation</h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                Regular updates with new features based on user feedback
+              </p>
+            </Card>
           </div>
         </div>
       </section>
+
+   
     </div>
   );
-};
-
-export default Service;
+}

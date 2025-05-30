@@ -11,6 +11,16 @@ const EvaluationSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+  studentName: {
+    type: String
+  },
+  studentEmail: {
+    type: String
+  },
+  active: {
+    type: Boolean,
+    default: false
+  },
   weekStartDate: {
     type: Date,
     required: true
@@ -19,6 +29,8 @@ const EvaluationSchema = new mongoose.Schema({
     type: Date,
     required: true
   },
+  startDate:  { type: Date, required: true },
+  endDate:    { type: Date, required: true },
   weeklyPerformance: {
     teamwork: { type: Number, min: 0, max: 10, required: true },
     initiative: { type: Number, min: 0, max: 10, required: true },
@@ -39,7 +51,7 @@ const EvaluationSchema = new mongoose.Schema({
     },
     progress: { type: Number, min: 0, max: 100, required: true },
     deadline: { type: Date, required: true },
-    remarks: String
+    remarks: { type: String }
   },
   overallGrade: {
     type: Number,
@@ -48,6 +60,10 @@ const EvaluationSchema = new mongoose.Schema({
     required: true
   },
   createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  updatedAt: {
     type: Date,
     default: Date.now
   }

@@ -19,7 +19,7 @@ const UserattendanceApp = () => {
         const data = await res.json();
         setPendingAttendances(Array.isArray(data) ? data : []);
       } catch (err) {
-        console.error("Error fetching pending attendances:", err);
+        console.log("Error fetching pending attendances:", err);
         setPendingAttendances([]);
       }
     };
@@ -32,13 +32,13 @@ const UserattendanceApp = () => {
   useEffect(() => {
     const fetchApproved = async () => {
       try {
-        const res = await fetch(
-          `/api/attendanceRoute/approved?applicantId=${currentUser._id}`
-        );
+        const res = await fetch(`/api/attendanceRoute/approvedforuser/${currentUser._id}`)
+
         const data = await res.json();
+        console.log("Approved Data777777777:", data);
         setApprovedAttendances(Array.isArray(data) ? data : []);
       } catch (err) {
-        console.error("Error fetching approved attendances:", err);
+        console.log("Error fetching approved attendances:", err);
         setApprovedAttendances([]);
       }
     };

@@ -19,13 +19,14 @@ import { VscGraphLine } from "react-icons/vsc";
 import { RiProgress5Line } from "react-icons/ri";
 import { RiCalendarScheduleFill } from "react-icons/ri";
 import { SiGoogleanalytics } from "react-icons/si";
-import { TbWorldSearch } from "react-icons/tb";
+import { TbMessageDots, TbWorldSearch } from "react-icons/tb";
 import { LuNotebookPen } from "react-icons/lu";
 import { GrAnalytics } from "react-icons/gr";
 import { LuNotebookText } from "react-icons/lu";
 import { GrUserManager } from "react-icons/gr";
 import { FaUserCheck } from "react-icons/fa6";
 import { BsFillBookmarkCheckFill } from "react-icons/bs";
+import { PiUserListBold } from "react-icons/pi";
 
 
 const DashSidebasr = () => {
@@ -60,6 +61,7 @@ const DashSidebasr = () => {
       <Link to="/DashboardUser?tab=profile"><SidebarItem active={tab==="profile"} icon={HiUser} as="div" label={currentUser.roles} className=' font-serif'>profile</SidebarItem></Link>
       <Link to="/DashboardUser?tab=search"><SidebarItem active={tab==="search"} icon={TbWorldSearch } as="div" className=' font-serif'>SearchOppPosted</SidebarItem></Link>
       {currentUser.roles==="User" && currentUser.applicationStatus==="approved" &&(<>
+      <Link to="/DashboardUser?tab=MessagesTab"><SidebarItem active={tab==="MessagesTab"} icon={TbMessageDots  } as="div" className=' font-serif'>MessagesTab </SidebarItem></Link>      
       <Link to="/DashboardUser?tab=progress"><SidebarItem active={tab==="progress"} icon={FaBarsProgress } as="div" className=' font-serif'>ProgressTracking</SidebarItem></Link>
       <Link to="/DashboardUser?tab=attendance"><SidebarItem active={tab==="attendance"} icon={LuNotebookPen  } as="div" className=' font-serif'>AttendanceReport</SidebarItem></Link>
       <Link to="/DashboardUser?tab=UserattendanceApp"><SidebarItem active={tab==="UserattendanceApp"} icon={BsFillBookmarkCheckFill } as="div" className=' font-serif'>Approved Attendance</SidebarItem></Link>
@@ -71,6 +73,7 @@ const DashSidebasr = () => {
       {currentUser.roles==="Advisor" &&<span className='font-bold flex flex-col gap-2'>
       <Link to="/DashboardAdvisor?tab=AdvisorDashboard"><SidebarItem active={tab==="AdvisorDashboard"} icon={HiChartPie} as="div" className=' font-serif' >AdvisorDashboard</SidebarItem></Link>
       <Link to="/DashboardAdvisor?tab=profile"><SidebarItem active={tab==="profile"} icon={HiUser} as="div" className=' font-serif' label={currentUser.roles}>profile</SidebarItem></Link>
+      <Link to="/DashboardUser?tab=MessagesTab"><SidebarItem active={tab==="MessagesTab"} icon={TbMessageDots  } as="div" className=' font-serif'>MessagesTab </SidebarItem></Link>      
       <Link to="/DashboardAdvisor?tab=Monitoring"><SidebarItem active={tab==="Monitoring"} icon={RiProgress5Line } as="div" className=' font-serif'>Progress Monitoring </SidebarItem></Link>
       <Link to="/DashboardAdvisor?tab=Communication"><SidebarItem active={tab==="Communication"} icon={RiCalendarScheduleFill } as="div" className=' font-serif'>Communication & Scheduling</SidebarItem></Link>
       <Link to="/DashboardAdvisor?tab=Reporting"><SidebarItem active={tab==="Reporting"} icon={SiGoogleanalytics } as="div" className=' font-serif'>Reporting & Analytics</SidebarItem></Link>
@@ -84,6 +87,7 @@ const DashSidebasr = () => {
       <Link to="/DashboardFaculty?tab=Attenadpproval"><SidebarItem active={tab==="Attenadpproval"} icon={LuNotebookText } as="div" className=' font-serif'>Attendance Approval</SidebarItem></Link>
       <Link to="/DashboardFaculty?tab=GreadingActivity"><SidebarItem active={tab==="GreadingActivity"} icon={SiGreatlearning } as="div" className=' font-serif'>Greading & Activity</SidebarItem></Link>
       <Link to="/DashboardFaculty?tab=GeneretReport"><SidebarItem active={tab==="GeneretReport"} icon={VscGraphLine } as="div" className=' font-serif'>GeneretReport</SidebarItem></Link>
+      <Link to="/DashboardFaculty?tab=GreadListingPage"><SidebarItem active={tab==="GreadListingPage"} icon={PiUserListBold } as="div" className=' font-serif'>GreadListingPage</SidebarItem></Link>
       </span>}
 
 </SidebarItemGroup>

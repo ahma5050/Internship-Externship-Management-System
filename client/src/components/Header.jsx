@@ -26,10 +26,10 @@ const Header = () => {
   console.log("Profile URL:", currentUser?.profile);
 
   return (
-    <Navbar className='border-b-2 z-40 relative overflow-visible'>
+    <Navbar className='sticky top-0 z-50 w-full transition-all duration-300  dark:bg-slate-900/80 backdrop-blur-md   bg-transparent'>
  <Link to="/" className="flex items-center">
-            <span className="text-2xl font-bold text-primary">
-              Intern<span className="text-secondary">Xcel</span>
+            <span className="text-2xl font-bold text-primary orbitron-teka">
+              Liva<span className="text-blue-700 galada-regular font-bold">EXM</span>
             </span>
           </Link>
       <form>
@@ -43,11 +43,12 @@ const Header = () => {
         <Navbar.Link  as="div" active={path === '/'}><Link to="/" className="font-serif text-lg">Home</Link></Navbar.Link>
         <Navbar.Link as="div" active={path === '/About'}><Link to="/About" className="font-serif text-lg">About</Link></Navbar.Link>
         <Navbar.Link as="div" active={path === '/Service'}><Link to="/Service" className="font-serif text-lg">Service</Link></Navbar.Link>
+        <Navbar.Link as="div" active={path === '/Contact'}><Link to="/Contact" className="font-serif text-lg">Contact</Link></Navbar.Link>
         <Navbar.Link as="div" active={path === '#'}>{ currentUser && currentUser.applicationStatus==="approved" && (<span className="font-serif text-lg bg-green-200 p-1 rounded-lg border text-blue-900">verifed </span>)}</Navbar.Link>
    
       </Navbar.Collapse>
       <div className='hidden md:block' onClick={darkModehandle}>
-        {darkMode ? <MdChromeReaderMode size={27} className='text-blue-400 '/> : <MdChromeReaderMode size={27} className='text-gray-800'/>}
+        {darkMode ? <MdChromeReaderMode size={27} className='text-white '/> : <MdChromeReaderMode size={27} className='text-blue-600'/>}
       </div>
       {currentUser ? (
   <Dropdown

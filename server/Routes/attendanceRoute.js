@@ -11,7 +11,8 @@ router.get('/approved/:facultyId', ApprovedAtendance)
 // routes/attendanceRoutes.js
 router.get('/rejected/:facultyId', RejectedAttendance);
 router.get('/pending', UserpendingAtte)
-router.get('/approved', UserapprovedAtte)
+router.get('/approvedforuser/:applicantId', UserapprovedAtte)
+
 
 
 export default router;

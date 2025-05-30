@@ -14,6 +14,7 @@ import DashboardUser from "./pages/DashboardUser";
 import DashboardAdvisor from "./pages/DashboardAdvisor";
 import DashboardFaculty from "./pages/DashboardFaculty";
 import Service from "./pages/Service";
+import Contact from "./pages/Contact";
 import DashPosts from "./pages/DashPosts";
 import UpdatePosts from "./pages/UpdatePosts";
 import ApplayInter from "./pages/ApplayInter";
@@ -34,6 +35,7 @@ const App = () => {
         <Route path="/SignIn" element={<SignIn />} />
         <Route path="/SignUp" element={<SignUp />} />
         <Route path="/Service" element={<Service />} />
+        <Route path="/Contact" element={<Contact />} />
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/About" element={<About />} />
         <Route element={<PrivetRoute />}>

@@ -14,7 +14,7 @@ export const verifyUser = async (req, res, next) => {
   try {
     payload = jwt.verify(token, process.env.SECRET);
   } catch (err) {
-    return next(ErrorHandler(401, "Invalid or expired token"));
+    return next(ErrorHandler(401, "Invalid or expired token..."));
   }
 
   // Optional but recommended: re‑fetch the user so you have freshest role/status

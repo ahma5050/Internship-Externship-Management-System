@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Card, Spinner } from 'flowbite-react';
+import { Avatar, Card, Spinner } from 'flowbite-react';
 import { HiOutlineUserCircle, HiCheckCircle, HiMail, HiUserAdd } from 'react-icons/hi';
 import { ThemContext } from '../context/ThemContext';
 import { useSelector } from 'react-redux';

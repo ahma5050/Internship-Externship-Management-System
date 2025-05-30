@@ -112,6 +112,7 @@ const EvaluationPage = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
+        console.log(' eeeeeeeeeeeeeeeeeeeeeeee  Error data:', errorData);
         throw new Error(errorData.message || 'Submission failed');
       }
 
@@ -163,7 +164,6 @@ const EvaluationPage = () => {
           value={selectedStudent?._id || ''}
           onChange={(e) => setSelectedStudent(approvedUsers.find(s => s._id === e.target.value) || null)}
           required
-         
         >
           <option value="">Select a student</option>
           {approvedUsers.map(student => (
@@ -172,6 +172,15 @@ const EvaluationPage = () => {
             </option>
           ))}
         </Select>
+        
+        {/* Added: Display application period dates when student is selected */}
+        {selectedStudent && (
+          <div className="mt-2">
+            <p className="text-gray-600 dark:text-gray-300">
+              Application Period: {new Date(selectedStudent.startDate).toLocaleDateString()} to {new Date(selectedStudent.endDate).toLocaleDateString()}
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Week Selection */}
@@ -181,11 +190,11 @@ const EvaluationPage = () => {
           onWeekSelect={(start, end) => setWeekRange({ start, end })} 
         />
     
-{weekRange.start && weekRange.end && (
-  <p className="mt-2 text-gray-600">
-    Selected Week: {weekRange.start.toLocaleDateString()} to {weekRange.end.toLocaleDateString()}
-  </p>
-)}
+        {weekRange.start && weekRange.end && (
+          <p className="mt-2 text-gray-600 dark:text-gray-300">
+            Selected Week: {weekRange.start.toLocaleDateString()} to {weekRange.end.toLocaleDateString()}
+          </p>
+        )}
       </div>
 
       {/* Weekly Performance */}
@@ -274,7 +283,7 @@ const EvaluationPage = () => {
       </section>
 
       {/* Overall Grade */}
-      <section cclassName={`p-6 max-w-6xl mx-auto space-y-8 ${darkMode ? 'bg-gray-900 text-white' : 'bg-white'}`}>
+      <section className={`p-6 max-w-6xl mx-auto space-y-8 ${darkMode ? 'bg-gray-900 text-white' : 'bg-white'}`}>
         <h3 className="text-xl font-semibold mb-4">Overall Weekly Grade (0-100)</h3>
         <div className="w-full md:w-1/2">
           <TextInput

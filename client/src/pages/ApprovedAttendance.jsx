@@ -45,7 +45,7 @@ const ApprovedAttendance = () => {
           </p>
         </div>
 
-        {attendances.length === 0 ? (
+        {attendances?.length === 0 ? (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

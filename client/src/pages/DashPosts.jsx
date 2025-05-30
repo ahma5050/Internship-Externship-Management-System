@@ -32,7 +32,8 @@ import {
               try {
                 const res = await fetch(`/api/postRoute/getPost?facultyId=${currentUser._id}&startIndex=0`);
                 const data = await res.json();
-                console.log("Fetched Posts:", data);
+
+                console.log("Fetched @@@@@@@@@@@@@@@@@@@@@@@@@Posts:", data);
           
                 if (res.ok) {
                   setUserPosts(data.posts);

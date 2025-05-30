@@ -147,7 +147,7 @@ export const UserpendingAtte = async (req, res) => {
 
 // Same for /approved
 export const UserapprovedAtte = async (req, res) => {
-  const { applicantId } = req.query;
+  const { applicantId } = req.params; // Change from req.query to req.params
   try {
     const records = await Attendance.find({
       applicantId,
@@ -158,6 +158,5 @@ export const UserapprovedAtte = async (req, res) => {
     res.status(500).json({ message: "Error fetching approved attendance." });
   }
 };
-
 
 
