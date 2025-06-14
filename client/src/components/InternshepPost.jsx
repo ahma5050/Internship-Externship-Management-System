@@ -71,7 +71,7 @@ const CreatePost = () => {
       formDataToSend.append("category", formData.category);
       formDataToSend.append("description", formData.description);
       formDataToSend.append("profile", file);
-      formDataToSend.append("facultyId", localStorage.getItem("facultyId")); // ✅ Add userId to the request
+      formDataToSend.append("facultyId", localStorage.getItem("facultyId")); 
 
       const res = await fetch("/api/postRoute/creatPost", {
         method: "POST",

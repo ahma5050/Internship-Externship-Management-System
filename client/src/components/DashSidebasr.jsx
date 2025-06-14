@@ -88,6 +88,7 @@ const DashSidebasr = () => {
       <Link to="/DashboardFaculty?tab=GreadingActivity"><SidebarItem active={tab==="GreadingActivity"} icon={SiGreatlearning } as="div" className=' font-serif'>Greading & Activity</SidebarItem></Link>
       <Link to="/DashboardFaculty?tab=GeneretReport"><SidebarItem active={tab==="GeneretReport"} icon={VscGraphLine } as="div" className=' font-serif'>GeneretReport</SidebarItem></Link>
       <Link to="/DashboardFaculty?tab=GreadListingPage"><SidebarItem active={tab==="GreadListingPage"} icon={PiUserListBold } as="div" className=' font-serif'>GreadListingPage</SidebarItem></Link>
+      <Link to="/DashboardFaculty?tab=GeneralApparentAccomplishment"><SidebarItem active={tab==="GeneralApparentAccomplishment"} icon={PiUserListBold } as="div" className=' font-serif'>General Accomplishment</SidebarItem></Link>
       </span>}
 
 </SidebarItemGroup>
