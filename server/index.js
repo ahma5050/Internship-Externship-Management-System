@@ -16,7 +16,7 @@ import chatRoutes from "./Routes/chatRoutes.js";
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
-const url = process.env.url;
+const url = process.env.MONGODB_URI;
 
 // ✅ Setup CORS
 app.use(cors({

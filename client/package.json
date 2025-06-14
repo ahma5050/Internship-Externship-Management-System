@@ -28,6 +28,7 @@
     "@tiptap/react": "^2.11.7",
     "@tiptap/starter-kit": "^2.11.7",
     "chart.js": "^4.4.8",
+    "firebase": "^11.9.1",
     "flowbite-react": "^0.10.2",
     "framer-motion": "^12.6.3",
     "icons": "^1.0.0",

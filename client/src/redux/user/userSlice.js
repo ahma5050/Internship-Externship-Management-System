@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   currentUser: null,
-  signUpError: null, // Separate error states
+  signUpError: null,
   signInError: null,
   updateError: null,
   loading: false,
@@ -39,7 +39,6 @@ const userSlice = createSlice({
       state.loading = false;
     },
     updateStart: (state) => {
-      // Fixed typo
       state.updateError = null;
       state.loading = true;
     },
@@ -53,10 +52,16 @@ const userSlice = createSlice({
       state.loading = false;
     },
     clearErrors: (state) => {
-      // New action to clear all errors
       state.signUpError = null;
       state.signInError = null;
       state.updateError = null;
+    },
+    signOutSuccess: (state) => {
+      state.currentUser = null;
+      state.signUpError = null;
+      state.signInError = null;
+      state.updateError = null;
+      state.loading = false;
     },
   },
 });
@@ -72,6 +77,7 @@ export const {
   updateSuccess,
   updateFail,
   clearErrors,
+  signOutSuccess,
 } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -15,6 +15,9 @@ import {
       approvePendingUserbyAdmin,
       getApprovedUsersbyAdmin,
       getUserStatusforUser,
+      signOut,
+      googlesign,
+   
      
      
     } from "../Controllers/AuthConteroller.js";
@@ -27,6 +30,8 @@ const router = express.Router();
 // Public
 router.post("/signup", SignUp);
 router.post("/signin", SignIn);
+router.post("/google", googlesign);
+router.post('/signout', verifyUser, signOut);
 
 // Protected: any authenticated user can update their own profile
 router.post(

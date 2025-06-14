@@ -104,6 +104,79 @@ export const SignIn = async (req, res, next) => {
   }
 };
 
+export const googlesign = async (req, res, next) => {
+  const { name, email, googlePhotoUrl } = req.body;
+  try {
+    const user = await UserModel.findOne({ email });
+    
+    if (user) {
+      const token = jwt.sign({ id: user._id }, process.env.SECRET);
+      const { password, ...rest } = user._doc;
+      return res
+        .status(200)
+        .cookie("access_token", token, { 
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+          maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+        })
+        .json(rest);
+    } else {
+      const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+      const salt = await bcryptjs.genSalt(10);
+      const hashedPassword = await bcryptjs.hash(generatedPassword, 10);
+      
+      const newUser = new UserModel({
+        userName: name.toLowerCase().split(" ").join("") + Math.random().toString(9).slice(-4),
+        email,
+        password: hashedPassword,
+        profile: googlePhotoUrl,
+      });
+      
+      await newUser.save();
+      const token = jwt.sign({ id: newUser._id }, process.env.SECRET);
+      const { password, ...rest } = newUser._doc;
+      
+      return res
+        .status(200)
+        .cookie("access_token", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+          maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+        })
+        .json(rest);
+    }
+  } catch (error) {
+    console.error('Google auth error:', error);
+    res.status(500).json({ 
+      success: false,
+      message: 'Internal server error during Google authentication'
+    });
+  }
+};
+
+export const signOut = (req, res) => {
+  try {
+    res.clearCookie('access_token', {  // Consistent cookie name
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true
+    });
+    
+    res.status(200).json({
+      success: true,
+      message: 'Signed out successfully'
+    });
+  } catch (error) {
+    console.error('Signout error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error'
+    });
+  }
+};
+
 export const UpdetUser = async (req, res, next) => {
   const { userName, email, password } = req.body;
   const profile = req.file ? `/uploads/${req.file.filename}` : undefined; // Use undefined instead of null for MongoDB updates
